@@ -1,31 +1,31 @@
 from fastapi import APIRouter, HTTPException
 
-from schemas.auth import LoginRequest, RegisterRequest
+from schemas.auth import AuthResponse, LoginRequest, RegisterRequest
 from utils.supabase import SupabaseClient
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/login")
-async def login(req: LoginRequest) -> str:
+async def login(req: LoginRequest) -> AuthResponse:
     sb_client = SupabaseClient()
 
     try:
         res = sb_client.auth.sign_in_with_password(
             credentials={"email": req.email, "password": req.password}
         )
-        return {"access_token": res.get("access_token")}
+        return {"access_token": res.session.access_token, "token_type": res.session.token_type}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.post("/register")
-async def register(req: RegisterRequest) -> str:
+async def register(req: RegisterRequest) -> AuthResponse:
     sb_client = SupabaseClient()
 
     try:
         res = sb_client.auth.sign_up(credentials={"email": req.email, "password": req.password})
-        return {"access_token": res.get("access_token")}
+        return {"access_token": res.session.access_token, "token_type": res.session.token_type}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

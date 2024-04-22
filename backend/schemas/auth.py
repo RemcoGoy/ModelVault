@@ -12,3 +12,8 @@ class LoginRequest(AuthRequest):
 
 class RegisterRequest(AuthRequest):
     pass
+
+
+class AuthResponse(BaseModel):
+    access_token: str
+    token_type: str
