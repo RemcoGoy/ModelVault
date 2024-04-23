@@ -5,7 +5,7 @@ import { User } from '@/types/user';
 
 interface SessionState extends HydrationState {
     user: User | null
-    setUser: (user: User) => void
+    setUser: (user: User | null) => void
 }
 
 export const useSessionStore = create<SessionState>()(
@@ -14,7 +14,7 @@ export const useSessionStore = create<SessionState>()(
             (set, get) => ({
                 user: null as User | null,
                 _hasHydrated: false,
-                setUser: (user: User) => set({ user }),
+                setUser: (user: User | null) => set({ user }),
                 setHasHydrated: (state: boolean) => {
                     set({
                         _hasHydrated: state

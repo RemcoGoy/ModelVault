@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from schemas.auth import AuthResponse, LoginRequest, RegisterRequest
 from utils.supabase import SupabaseClient
+from utils.supabase_jwt import SupabaseJWTBearer
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -30,6 +31,6 @@ async def register(req: RegisterRequest) -> AuthResponse:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.post("/logout")
+@router.post("/logout", dependencies=[Depends(SupabaseJWTBearer())])
 async def logout() -> None:
     SupabaseClient().auth.sign_out()

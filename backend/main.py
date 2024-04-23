@@ -1,10 +1,11 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from routers import auth
+from utils.supabase_jwt import SupabaseJWTBearer
 
 load_dotenv()
 
@@ -27,6 +28,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api")
 
 
+# @app.get("/", dependencies=[Depends(SupabaseJWTBearer())])
 @app.get("/")
 def main():
     return {"version": "0.0.1"}
