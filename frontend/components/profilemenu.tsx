@@ -9,16 +9,20 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { User } from 'lucide-react';
 import { useSessionStore } from "@/auth";
 import { logOut } from "@/lib/actions/profile";
 import { toast } from "sonner";
 import Link from "next/link";
+import { User, Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes";
+
 
 export function ProfileMenu() {
     const user = useSessionStore(state => state.user);
     const setUser = useSessionStore(state => state.setUser);
     const accessToken = useSessionStore(state => state.user?.accessToken);
+
+    const { setTheme, theme } = useTheme()
 
     const handleLogout = async () => {
         try {
@@ -55,7 +59,11 @@ export function ProfileMenu() {
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Settings</DropdownMenuItem>
-                        <DropdownMenuItem>Support</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+                            <Sun className="h-6 w-[1.3rem] dark:hidden" />
+                            <Moon className="hidden size-5 dark:block" />
+                            <span className="ml-1">Toggle theme</span>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                     </DropdownMenuContent>
@@ -72,7 +80,11 @@ export function ProfileMenu() {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Support</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+                            <Sun className="h-6 w-[1.3rem] dark:hidden" />
+                            <Moon className="hidden size-5 dark:block" />
+                            <span className="ml-1">Toggle theme</span>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
                             <Link href="../auth/login">
