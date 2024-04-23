@@ -21,7 +21,7 @@ interface FormData {
     confirmPassword: string
 }
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
     const RegisterSchema = z.object({
         email: z.string().min(1, "Required"),
         password: z.string().min(1, "Required"),
