@@ -14,10 +14,13 @@ import { createUser } from "../actions"
 import { toast } from "sonner"
 import { RegisterFormData as FormData } from "@/types/formfield"
 import { useSessionStore } from "@/auth"
+import { useRouter } from "next/navigation"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
+    const router = useRouter();
+
     const RegisterSchema = z.object({
         email: z.string().min(1, "Required"),
         password: z.string().min(1, "Required"),
@@ -52,6 +55,8 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
                 const resultData: { access_token: string, token_type: string } = await result.json();
                 setUser({ email: data.email, accessToken: resultData.access_token })
                 toast("Successfully created new user")
+
+                router.push("/dashboard")
             }
         } catch (error: any) {
             toast.error(error.toString());
