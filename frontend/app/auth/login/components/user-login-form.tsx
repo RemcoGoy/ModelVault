@@ -13,6 +13,7 @@ import LoginFormField from "@/components/FormFields/LoginFormField"
 import { toast } from 'sonner'
 import { logIn } from "../actions"
 import { LoginFormData as FormData } from "@/types/formfield"
+import { useSessionStore } from "@/auth"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -21,6 +22,8 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
         email: z.string().min(1, "Required"),
         password: z.string().min(1, "Required"),
     });
+
+    const setUser = useSessionStore(state => state.setUser)
 
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const {
@@ -39,9 +42,11 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
             const result = await logIn(data);
 
             if (result.status !== 200) {
-                const error = await result.json();
+                const error: { detail: string } = await result.json();
                 toast.error(error.detail);
             } else {
+                const resultData: { access_token: string, token_type: string } = await result.json();
+                setUser({ email: data.email, accessToken: resultData.access_token })
                 toast("Successfully logged in")
             }
         } catch (error: any) {

@@ -13,6 +13,7 @@ import RegisterFormField from "@/components/FormFields/RegisterFormField"
 import { createUser } from "../actions"
 import { toast } from "sonner"
 import { RegisterFormData as FormData } from "@/types/formfield"
+import { useSessionStore } from "@/auth"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -25,6 +26,8 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
         message: "Passwords must match",
         path: ["confirmPassword"],
     });
+
+    const setUser = useSessionStore((state) => state.setUser)
 
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const {
@@ -43,9 +46,11 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
             const result = await createUser(data);
 
             if (result.status !== 200) {
-                const error = await result.json();
+                const error: { detail: string } = await result.json();
                 toast.error(error.detail);
             } else {
+                const resultData: { access_token: string, token_type: string } = await result.json();
+                setUser({ email: data.email, accessToken: resultData.access_token })
                 toast("Successfully created new user")
             }
         } catch (error: any) {
