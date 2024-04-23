@@ -1,21 +1,11 @@
 import Link from "next/link";
 import {
-    ChevronLeft,
-    ChevronRight,
-    Copy,
-    CreditCard,
-    File,
     Home,
     LineChart,
-    ListFilter,
-    MoreVertical,
     Package,
     Package2,
-    PanelLeft,
-    Search,
     Settings,
     ShoppingCart,
-    Truck,
     Users2,
 } from "lucide-react"
 
