@@ -41,8 +41,10 @@ export default function RootLayout({
                 <SearchComponent />
                 <ProfileMenu />
               </header>
+              <main>
+                {children}
+              </main>
             </div>
-            {children}
           </div>
         </Providers>
       </body>
