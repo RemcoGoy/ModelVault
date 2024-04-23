@@ -1,5 +1,5 @@
-export const createUser = async (data: any) => {
-    const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`, {
+export const logIn = async (data: any) => {
+    const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

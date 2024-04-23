@@ -24,7 +24,7 @@ export default function AuthLayout({
         switch (pathname) {
             case "/auth/login":
                 setFormTitle("Log in to your account")
-                setFormSubtitle("Enter your credentials below to log in to your account")
+                setFormSubtitle("Enter your credentials below to log in")
                 setRedirect({ path: "/auth/register", text: "Create account" })
                 break;
             case "/auth/register":

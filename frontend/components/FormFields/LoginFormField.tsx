@@ -1,7 +1,7 @@
-import { RegisterFormFieldProps } from "@/types/formfield";
+import { LoginFormFieldProps } from "@/types/formfield";
 import { Input } from "@/components/ui/input";
 
-const FormField: React.FC<RegisterFormFieldProps> = ({
+const LoginFormField: React.FC<LoginFormFieldProps> = ({
     type,
     placeholder,
     name,
@@ -20,4 +20,4 @@ const FormField: React.FC<RegisterFormFieldProps> = ({
     </>
 );
 
-export default FormField;
+export default LoginFormField;

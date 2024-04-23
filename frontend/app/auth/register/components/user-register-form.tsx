@@ -9,17 +9,12 @@ import { Label } from "@/components/ui/label"
 import { z } from "zod"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import FormField from "@/components/FormField"
-import { signIn } from "../actions"
+import RegisterFormField from "@/components/FormFields/RegisterFormField"
+import { createUser } from "../actions"
 import { toast } from "sonner"
+import { RegisterFormData as FormData } from "@/types/formfield"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
-
-interface FormData {
-    email: string
-    password: string
-    confirmPassword: string
-}
 
 export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
     const RegisterSchema = z.object({
@@ -45,7 +40,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
         setIsLoading(true);
 
         try {
-            const result = await signIn(data);
+            const result = await createUser(data);
 
             if (result.status !== 200) {
                 const error = await result.json();
@@ -68,19 +63,19 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
                         <Label className="sr-only" htmlFor="email">
                             Email
                         </Label>
-                        <FormField type="email" placeholder="name@example.com" name="email" error={errors.email} register={register} />
+                        <RegisterFormField type="email" placeholder="name@example.com" name="email" error={errors.email} register={register} />
                     </div>
                     <div className="grid gap-1">
                         <Label className="sr-only" htmlFor="password">
                             Password
                         </Label>
-                        <FormField type="password" placeholder="Password" name="password" error={errors.password} register={register} />
+                        <RegisterFormField type="password" placeholder="Password" name="password" error={errors.password} register={register} />
                     </div>
                     <div className="grid gap-1">
                         <Label className="sr-only" htmlFor="confirmPassword">
                             Confirm password
                         </Label>
-                        <FormField type="password" placeholder="Confirm password" name="confirmPassword" error={errors.confirmPassword} register={register} />
+                        <RegisterFormField type="password" placeholder="Confirm password" name="confirmPassword" error={errors.confirmPassword} register={register} />
                     </div>
                     <Button disabled={isLoading}>
                         {isLoading && (
