@@ -29,6 +29,7 @@ export const logIn = async (data: { email: string, password: string }): Promise<
                 access_token: resultData.access_token,
                 refresh_token: resultData.refresh_token,
                 username: resultData.username,
+                uid: resultData.uid
             }, error: null
         }
     }

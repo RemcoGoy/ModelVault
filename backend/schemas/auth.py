@@ -1,3 +1,4 @@
+from gotrue.types import User as SupabaseUser
 from pydantic import BaseModel
 
 
@@ -21,9 +22,15 @@ class RefreshRequest(BaseModel):
 class UserResponse(BaseModel):
     email: str
     username: str
+    uid: str
 
 
 class AuthResponse(UserResponse):
     access_token: str
     refresh_token: str
     token_type: str
+
+
+class AuthSchema(BaseModel):
+    user: SupabaseUser
+    access_token: str

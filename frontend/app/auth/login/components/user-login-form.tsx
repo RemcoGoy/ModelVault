@@ -49,7 +49,8 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
                     email: data.email,
                     username: user.username,
                     accessToken: user.access_token,
-                    refreshToken: user.refresh_token
+                    refreshToken: user.refresh_token,
+                    uid: user.uid
                 })
 
                 toast("Successfully logged in")

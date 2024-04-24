@@ -1,7 +1,10 @@
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from gotrue.types import UserResponse
+from supabase import Client
 
-from utils.supabase import SupabaseClient
+from schemas.auth import AuthSchema
+from utils.supabase import SupabaseClientFactory
 
 
 class SupabaseJWTBearer(HTTPBearer):
@@ -15,19 +18,18 @@ class SupabaseJWTBearer(HTTPBearer):
         if credentials:
             if not credentials.scheme == "Bearer":
                 raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
-            if not self.verify_jwt(credentials.credentials):
+            user_jwt = self.verify_jwt(credentials.credentials)
+            if not user_jwt:
                 raise HTTPException(status_code=403, detail="Invalid token or expired token.")
-            return credentials.credentials
+            return AuthSchema(user=user_jwt.user, access_token=credentials.credentials)
         else:
             raise HTTPException(status_code=403, detail="Invalid authorization code.")
 
-    def verify_jwt(self, jwtoken: str) -> bool:
-        isTokenValid: bool = False
-
+    def verify_jwt(self, jwtoken: str) -> UserResponse:
+        client: Client = SupabaseClientFactory.get_client(jwtoken)
         try:
-            payload = SupabaseClient().auth.get_user(jwtoken)
+            payload = client.auth.get_user(jwtoken)
         except:
             payload = None
-        if payload:
-            isTokenValid = True
-        return isTokenValid
+
+        return payload

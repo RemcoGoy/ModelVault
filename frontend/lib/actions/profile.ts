@@ -1,17 +1,13 @@
 'use server'
 
 import { cookies } from "next/headers";
+import api from "@/lib/api";
 
 export const logOut = async (): Promise<{ result: boolean | null, error: string | null }> => {
-    const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
+    const result = await api.post("/api/auth/logout")
 
     if (result.status !== 200) {
-        const error: { detail: string } = await result.json();
+        const error: { detail: string } = result.data;
         return {
             result: false,
             error: error.detail

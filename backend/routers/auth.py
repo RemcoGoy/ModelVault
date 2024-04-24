@@ -1,7 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Annotated
 
-from schemas.auth import AuthResponse, LoginRequest, RefreshRequest, RegisterRequest
-from utils.supabase import SupabaseClient
+from fastapi import APIRouter, Depends, HTTPException
+from supabase import Client
+
+from schemas.auth import (
+    AuthResponse,
+    AuthSchema,
+    LoginRequest,
+    RefreshRequest,
+    RegisterRequest,
+)
+from utils.supabase import SupabaseClientFactory
 from utils.supabase_jwt import SupabaseJWTBearer
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -9,7 +18,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/login")
 async def login(req: LoginRequest) -> AuthResponse:
-    sb_client = SupabaseClient()
+    sb_client = SupabaseClientFactory.get_client()
 
     try:
         res = sb_client.auth.sign_in_with_password(
@@ -21,6 +30,7 @@ async def login(req: LoginRequest) -> AuthResponse:
             "token_type": res.session.token_type,
             "email": req.email,
             "username": res.user.user_metadata.get("username", ""),
+            "uid": res.user.id,
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -28,7 +38,7 @@ async def login(req: LoginRequest) -> AuthResponse:
 
 @router.post("/register")
 async def register(req: RegisterRequest) -> AuthResponse:
-    sb_client = SupabaseClient()
+    sb_client: Client = SupabaseClientFactory.get_client()
 
     try:
         res = sb_client.auth.sign_up(
@@ -45,14 +55,15 @@ async def register(req: RegisterRequest) -> AuthResponse:
             "token_type": res.session.token_type,
             "email": req.email,
             "username": req.username,
+            "uid": res.user.id,
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.post("/refresh", dependencies=[Depends(SupabaseJWTBearer())])
+@router.post("/refresh")
 async def refresh(req: RefreshRequest) -> AuthResponse:
-    sb_client = SupabaseClient()
+    sb_client: Client = SupabaseClientFactory.get_client()
 
     try:
         res = sb_client.auth.refresh_session(req.refresh_token)
@@ -67,5 +78,6 @@ async def refresh(req: RefreshRequest) -> AuthResponse:
 
 
 @router.post("/logout")
-async def logout() -> None:
-    SupabaseClient().auth.sign_out()
+async def logout(auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]) -> None:
+    sb_client: Client = SupabaseClientFactory.get_client()
+    sb_client.auth.admin.sign_out(auth_session.access_token)

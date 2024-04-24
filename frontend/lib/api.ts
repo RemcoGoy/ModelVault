@@ -1,5 +1,7 @@
-import { useSessionStore } from '@/auth'
+'use server'
+
 import axios from 'axios'
+import { cookies } from 'next/headers'
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL
@@ -8,7 +10,8 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         if (config.headers) {
-            config.headers.Authorization = `Bearer ${useSessionStore.getState().user?.accessToken}`
+            const token = cookies().get("access_token")?.value;
+            config.headers.Authorization = `Bearer ${token}`
         }
         return config
     },

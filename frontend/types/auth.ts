@@ -4,4 +4,5 @@ export type AuthResponse = {
     refresh_token: string;
     username: string;
     email: string;
+    uid: string;
 }
