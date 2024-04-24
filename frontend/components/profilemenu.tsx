@@ -28,8 +28,6 @@ export function ProfileMenu() {
         try {
             const result = await logOut();
 
-            debugger;
-
             if (result.status !== 200) {
                 const error: { detail: string } = result.data;
                 toast.error(error.detail);
