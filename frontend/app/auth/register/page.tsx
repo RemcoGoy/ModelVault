@@ -4,7 +4,6 @@ import { useSessionStore } from "@/auth";
 import { UserRegisterForm } from "./components/user-register-form"
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { toast } from "sonner";
 
 export default function RegisterPage() {
     const user = useSessionStore(state => state.user);

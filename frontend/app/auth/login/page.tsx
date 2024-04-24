@@ -4,7 +4,6 @@ import { UserLoginForm } from "./components/user-login-form"
 import { useEffect } from "react";
 import { useSessionStore } from "@/auth";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 export default function LoginPage() {
     const user = useSessionStore(state => state.user);
