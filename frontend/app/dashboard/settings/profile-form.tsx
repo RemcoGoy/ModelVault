@@ -59,6 +59,19 @@ export function ProfileForm() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                                <Input disabled={true} type="email" placeholder="name@example.com" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
                     name="username"
                     render={({ field }) => (
                         <FormItem>
@@ -70,19 +83,6 @@ export function ProfileForm() {
                                 This is your public display name. It can be your real name or a
                                 pseudonym.
                             </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input type="email" placeholder="name@example.com" {...field} />
-                            </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
