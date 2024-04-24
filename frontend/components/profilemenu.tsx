@@ -20,7 +20,6 @@ import { useTheme } from "next-themes";
 export function ProfileMenu() {
     const user = useSessionStore(state => state.user);
     const setUser = useSessionStore(state => state.setUser);
-    const accessToken = useSessionStore(state => state.user?.accessToken);
 
     const { setTheme, theme } = useTheme()
 

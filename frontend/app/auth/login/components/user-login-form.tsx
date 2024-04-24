@@ -48,8 +48,8 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
                 const error: { detail: string } = await result.json();
                 toast.error(error.detail);
             } else {
-                const resultData: { access_token: string, token_type: string } = await result.json();
-                setUser({ email: data.email, accessToken: resultData.access_token })
+                const resultData: { access_token: string, token_type: string, refresh_token: string } = await result.json();
+                setUser({ email: data.email, accessToken: resultData.access_token, refreshToken: resultData.refresh_token })
                 toast("Successfully logged in")
 
                 router.push("/dashboard")
