@@ -15,7 +15,6 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { User, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes";
-import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 
 
@@ -29,24 +28,20 @@ export function ProfileMenu() {
 
     const handleLogout = async () => {
         try {
-            const result = await logOut();
+            const { result, error } = await logOut();
 
-            if (result.status !== 200) {
-                const error: { detail: string } = result.data;
-                toast.error(error.detail);
-            } else {
+            if (result) {
                 setUser(null)
                 toast("Successfully logged out")
 
                 router.push('/auth/login')
             }
-        } catch (error: any) {
-            if (error instanceof AxiosError) {
-                const message = error.response?.data.detail;
-                toast.error(message);
-            } else {
-                toast.error(error.toString());
+
+            if (error) {
+                toast.error(error);
             }
+        } catch (error: any) {
+            toast.error(error.toString());
         }
     }
 

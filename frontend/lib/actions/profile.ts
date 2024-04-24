@@ -1,8 +1,27 @@
-import api from "@/lib/api";
-import { AxiosResponse } from "axios";
+'use server'
 
-export const logOut = async (): Promise<AxiosResponse> => {
-    const result = await api.post("/api/auth/logout")
+import { cookies } from "next/headers";
 
-    return result;
+export const logOut = async (): Promise<{ result: boolean | null, error: string | null }> => {
+    const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+
+    if (result.status !== 200) {
+        const error: { detail: string } = await result.json();
+        return {
+            result: false,
+            error: error.detail
+        }
+    } else {
+        cookies().delete("access_token")
+
+        return {
+            result: true,
+            error: null
+        }
+    }
 }
