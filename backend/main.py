@@ -1,5 +1,6 @@
 import os
 
+import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,7 +29,10 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 
 
-# @app.get("/", dependencies=[Depends(SupabaseJWTBearer())])
 @app.get("/")
 def main():
     return {"version": "0.0.1"}
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

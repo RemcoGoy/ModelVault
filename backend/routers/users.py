@@ -15,9 +15,17 @@ router = APIRouter(prefix="/users", tags=["users"])
 async def update(
     req: UpdateUserRequest, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
 ):
-    sb_client: Client = SupabaseClientFactory.get_client(auth_session.access_token)
+    sb_client: Client = SupabaseClientFactory.get_client()
 
     try:
-        sb_client.auth.admin.update_user_by_id(req.uid)
+        res = sb_client.auth.admin.update_user_by_id(
+            req.uid, attributes={"user_metadata": {"username": req.username}}
+        )
+
+        return {
+            "email": res.user.email,
+            "username": res.user.user_metadata["username"],
+            "uid": res.user.id,
+        }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
