@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input"
 import { toast } from 'sonner'
 import { useSessionStore } from "@/auth"
 import { useEffect, useState } from "react"
+import { updateUser } from "./actions"
 
 const profileFormSchema = z.object({
     username: z
@@ -36,6 +37,7 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 export function ProfileForm() {
     const user = useSessionStore(state => state.user);
+    const setUser = useSessionStore(state => state.setUser);
 
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileFormSchema),
@@ -50,8 +52,27 @@ export function ProfileForm() {
         }
     }, [form, user])
 
-    function onSubmit(data: ProfileFormValues) {
-        toast("Settings saved")
+    async function onSubmit(data: ProfileFormValues) {
+        if (user) {
+            try {
+                const { updatedUser, error } = await updateUser(user.uid, data.username);
+
+                if (updatedUser) {
+                    setUser({
+                        ...user,
+                        username: updatedUser.username
+                    })
+
+                    toast("Successfully updated account")
+                }
+
+                if (error) {
+                    toast.error(error)
+                }
+            } catch (error: any) {
+                toast.error(error.toString());
+            }
+        }
     }
 
     return (
