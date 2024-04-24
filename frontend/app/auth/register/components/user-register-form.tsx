@@ -60,7 +60,6 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
                 })
 
                 toast("Successfully create a user")
-                router.push("/dashboard/settings")
             }
 
             if (error) {

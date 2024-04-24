@@ -53,7 +53,6 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
                 })
 
                 toast("Successfully logged in")
-                router.push("/dashboard/settings")
             }
 
             if (error) {

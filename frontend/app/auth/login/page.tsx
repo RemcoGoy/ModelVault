@@ -13,7 +13,6 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (user && userHasHydrated) {
-            toast("You are already logged in!")
             router.push("/dashboard/settings");
         }
     }, [user, userHasHydrated, router]);
