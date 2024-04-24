@@ -66,6 +66,6 @@ async def refresh(req: RefreshRequest) -> AuthResponse:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.post("/logout", dependencies=[Depends(SupabaseJWTBearer())])
+@router.post("/logout")
 async def logout() -> None:
     SupabaseClient().auth.sign_out()

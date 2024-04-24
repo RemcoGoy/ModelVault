@@ -49,30 +49,25 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
         setIsLoading(true);
 
         try {
-            const result = await createUser(data);
+            const { user, error } = await createUser(data);
 
-            if (result.status !== 200) {
-                const error: { detail: string } = await result.json();
-                toast.error(error.detail);
-            } else {
-                const resultData: AuthResponse = await result.json();
+            if (user) {
                 setUser({
                     email: data.email,
-                    username: resultData.username,
-                    accessToken: resultData.access_token,
-                    refreshToken: resultData.refresh_token
+                    username: user.username,
+                    accessToken: user.access_token,
+                    refreshToken: user.refresh_token
                 })
-                toast("Successfully created new user")
 
-                router.push("/dashboard")
+                toast("Successfully create a user")
+                router.push("/dashboard/settings")
+            }
+
+            if (error) {
+                toast.error(error)
             }
         } catch (error: any) {
-            if (error instanceof AxiosError) {
-                const message = error.response?.data.detail;
-                toast.error(message);
-            } else {
-                toast.error(error.toString());
-            }
+            toast.error(error.toString());
         }
 
         setIsLoading(false);

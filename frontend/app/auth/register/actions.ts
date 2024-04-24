@@ -1,4 +1,9 @@
-export const createUser = async (data: any) => {
+'use server'
+
+import { AuthResponse } from "@/types/auth";
+import { cookies } from "next/headers";
+
+export const createUser = async (data: { email: string, password: string, username: string }): Promise<{ user: any | null, error: string | null }> => {
     const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`, {
         method: "POST",
         headers: {
@@ -8,5 +13,23 @@ export const createUser = async (data: any) => {
         body: JSON.stringify(data)
     })
 
-    return result;
+    if (result.status !== 200) {
+        const error: { detail: string } = await result.json();
+        return {
+            user: null,
+            error: error.detail
+        }
+    } else {
+        const resultData: AuthResponse = await result.json();
+
+        cookies().set("access_token", resultData.access_token, { path: "/" })
+
+        return {
+            user: {
+                access_token: resultData.access_token,
+                refresh_token: resultData.refresh_token,
+                username: resultData.username,
+            }, error: null
+        }
+    }
 }
