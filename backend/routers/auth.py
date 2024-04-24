@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas.auth import AuthResponse, LoginRequest, RegisterRequest
+from schemas.auth import AuthResponse, LoginRequest, RefreshRequest, RegisterRequest
 from utils.supabase import SupabaseClient
 from utils.supabase_jwt import SupabaseJWTBearer
 
@@ -15,7 +15,11 @@ async def login(req: LoginRequest) -> AuthResponse:
         res = sb_client.auth.sign_in_with_password(
             credentials={"email": req.email, "password": req.password}
         )
-        return {"access_token": res.session.access_token, "token_type": res.session.token_type}
+        return {
+            "access_token": res.session.access_token,
+            "refresh_token": res.session.refresh_token,
+            "token_type": res.session.token_type,
+        }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -26,7 +30,27 @@ async def register(req: RegisterRequest) -> AuthResponse:
 
     try:
         res = sb_client.auth.sign_up(credentials={"email": req.email, "password": req.password})
-        return {"access_token": res.session.access_token, "token_type": res.session.token_type}
+        return {
+            "access_token": res.session.access_token,
+            "refresh_token": res.session.refresh_token,
+            "token_type": res.session.token_type,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/refresh", dependencies=[Depends(SupabaseJWTBearer())])
+async def refresh(req: RefreshRequest) -> AuthResponse:
+    sb_client = SupabaseClient()
+
+    try:
+        res = sb_client.auth.refresh_session(req.refresh_token)
+
+        return {
+            "access_token": res.session.access_token,
+            "refresh_token": res.session.refresh_token,
+            "token_type": res.session.token_type,
+        }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

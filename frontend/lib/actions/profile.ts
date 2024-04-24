@@ -1,12 +1,8 @@
-export const logOut = async (accessToken: string) => {
-    const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": `Bearer ${accessToken}`
-        }
-    })
+import api from "@/lib/api";
+import { AxiosResponse } from "axios";
+
+export const logOut = async (): Promise<AxiosResponse> => {
+    const result = await api.post("/api/auth/logout")
 
     return result;
 }

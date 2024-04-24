@@ -26,13 +26,14 @@ export function ProfileMenu() {
 
     const handleLogout = async () => {
         try {
-            const result = await logOut(accessToken ?? "");
+            const result = await logOut();
+
 
             if (result.status !== 200) {
-                const error: { detail: string } = await result.json();
+                const error: { detail: string } = result.data;
                 toast.error(error.detail);
             } else {
-                const resultData = await result.json();
+                const resultData = result.data;
                 setUser(null)
                 toast("Successfully logged out")
             }
@@ -86,12 +87,16 @@ export function ProfileMenu() {
                             <span className="ml-1">Toggle theme</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <Link href="../auth/login">
+                        <Link href="/auth/login">
+                            <DropdownMenuItem>
                                 Login
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>Register</DropdownMenuItem>
+                            </DropdownMenuItem>
+                        </Link>
+                        <Link href="auth/register">
+                            <DropdownMenuItem>
+                                Register
+                            </DropdownMenuItem>
+                        </Link>
                     </DropdownMenuContent>
                 </DropdownMenu>
             }
