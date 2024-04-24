@@ -11,11 +11,12 @@ type FormFieldProps = {
 
 export type RegisterFormData = {
     email: string;
+    username: string;
     password: string;
     confirmPassword: string;
 };
 
-export type RegisterFieldNames = "email" | "password" | "confirmPassword";
+export type RegisterFieldNames = "email" | "username" | "password" | "confirmPassword";
 
 export type RegisterFormFieldProps = FormFieldProps & {
     name: RegisterFieldNames;

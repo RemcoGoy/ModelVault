@@ -11,14 +11,19 @@ class LoginRequest(AuthRequest):
 
 
 class RegisterRequest(AuthRequest):
-    pass
+    username: str
 
 
 class RefreshRequest(BaseModel):
     refresh_token: str
 
 
-class AuthResponse(BaseModel):
+class UserResponse(BaseModel):
+    email: str
+    username: str
+
+
+class AuthResponse(UserResponse):
     access_token: str
     refresh_token: str
     token_type: str

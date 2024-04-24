@@ -15,6 +15,8 @@ import { logIn } from "../actions"
 import { LoginFormData as FormData } from "@/types/formfield"
 import { useSessionStore } from "@/auth"
 import { useRouter } from 'next/navigation'
+import { AuthResponse } from "@/types/auth"
+import { AxiosError } from "axios"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -48,14 +50,24 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
                 const error: { detail: string } = await result.json();
                 toast.error(error.detail);
             } else {
-                const resultData: { access_token: string, token_type: string, refresh_token: string } = await result.json();
-                setUser({ email: data.email, accessToken: resultData.access_token, refreshToken: resultData.refresh_token })
+                const resultData: AuthResponse = await result.json();
+                setUser({
+                    email: data.email,
+                    username: resultData.username,
+                    accessToken: resultData.access_token,
+                    refreshToken: resultData.refresh_token
+                })
                 toast("Successfully logged in")
 
                 router.push("/dashboard")
             }
         } catch (error: any) {
-            toast.error(error.toString());
+            if (error instanceof AxiosError) {
+                const message = error.response?.data.detail;
+                toast.error(message);
+            } else {
+                toast.error(error.toString());
+            }
         }
 
         setIsLoading(false);

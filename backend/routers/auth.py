@@ -19,6 +19,8 @@ async def login(req: LoginRequest) -> AuthResponse:
             "access_token": res.session.access_token,
             "refresh_token": res.session.refresh_token,
             "token_type": res.session.token_type,
+            "email": req.email,
+            "username": res.user.user_metadata.get("username", ""),
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -29,11 +31,20 @@ async def register(req: RegisterRequest) -> AuthResponse:
     sb_client = SupabaseClient()
 
     try:
-        res = sb_client.auth.sign_up(credentials={"email": req.email, "password": req.password})
+        res = sb_client.auth.sign_up(
+            credentials={
+                "email": req.email,
+                "password": req.password,
+                "options": {"data": {"username": req.username}},
+            }
+        )
+
         return {
             "access_token": res.session.access_token,
             "refresh_token": res.session.refresh_token,
             "token_type": res.session.token_type,
+            "email": req.email,
+            "username": req.username,
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

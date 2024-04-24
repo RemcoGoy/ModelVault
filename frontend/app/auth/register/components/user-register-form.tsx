@@ -15,6 +15,8 @@ import { toast } from "sonner"
 import { RegisterFormData as FormData } from "@/types/formfield"
 import { useSessionStore } from "@/auth"
 import { useRouter } from "next/navigation"
+import { AuthResponse } from "@/types/auth"
+import { AxiosError } from "axios"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -23,6 +25,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
 
     const RegisterSchema = z.object({
         email: z.string().min(1, "Required"),
+        username: z.string().min(1, "Required"),
         password: z.string().min(1, "Required"),
         confirmPassword: z.string().min(1, "Required"),
     }).refine((data) => data.password === data.confirmPassword, {
@@ -52,14 +55,24 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
                 const error: { detail: string } = await result.json();
                 toast.error(error.detail);
             } else {
-                const resultData: { access_token: string, token_type: string, refresh_token: string } = await result.json();
-                setUser({ email: data.email, accessToken: resultData.access_token, refreshToken: resultData.refresh_token })
+                const resultData: AuthResponse = await result.json();
+                setUser({
+                    email: data.email,
+                    username: resultData.username,
+                    accessToken: resultData.access_token,
+                    refreshToken: resultData.refresh_token
+                })
                 toast("Successfully created new user")
 
                 router.push("/dashboard")
             }
         } catch (error: any) {
-            toast.error(error.toString());
+            if (error instanceof AxiosError) {
+                const message = error.response?.data.detail;
+                toast.error(message);
+            } else {
+                toast.error(error.toString());
+            }
         }
 
         setIsLoading(false);
@@ -69,6 +82,12 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
         <div className={cn("grid gap-6", className)} {...props}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="grid gap-2">
+                    <div className="grid gap-1">
+                        <Label className="sr-only" htmlFor="email">
+                            Username
+                        </Label>
+                        <RegisterFormField type="text" placeholder="Username" name="username" error={errors.username} register={register} />
+                    </div>
                     <div className="grid gap-1">
                         <Label className="sr-only" htmlFor="email">
                             Email

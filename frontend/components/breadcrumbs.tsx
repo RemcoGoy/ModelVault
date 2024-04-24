@@ -11,12 +11,12 @@ import {
 import Link from "next/link"
 import { usePathname } from "next/navigation";
 import humanizeString from "humanize-string"
+import React from "react";
 
 export function Breadcrumbs() {
     const pathname = usePathname();
 
     return (
-        // TODO: Make dynamic
         <Breadcrumb className="hidden md:flex">
             <BreadcrumbList>
                 {pathname.split("/").filter(k => k !== "").map((pathPart, index) => {
@@ -31,14 +31,14 @@ export function Breadcrumbs() {
                         )
                     } else {
                         return (
-                            <>
-                                <BreadcrumbItem key={pathPart}>
+                            <React.Fragment key={pathPart}>
+                                <BreadcrumbItem>
                                     <BreadcrumbLink asChild>
                                         <Link href={"/" + splits.slice(0, index + 1).join("/")}>{humanizeString(pathPart)}</Link>
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator />
-                            </>
+                            </React.Fragment>
                         )
                     }
                 })}
