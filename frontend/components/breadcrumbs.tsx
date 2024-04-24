@@ -34,7 +34,7 @@ export function Breadcrumbs() {
                             <>
                                 <BreadcrumbItem key={pathPart}>
                                     <BreadcrumbLink asChild>
-                                        <Link href={splits.slice(0, index + 1).join("/")}>{humanizeString(pathPart)}</Link>
+                                        <Link href={"/" + splits.slice(0, index + 1).join("/")}>{humanizeString(pathPart)}</Link>
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator />

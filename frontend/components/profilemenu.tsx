@@ -56,9 +56,15 @@ export function ProfileMenu() {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuLabel>
+                            My Account
+                        </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Settings</DropdownMenuItem>
+                        <Link href="/dashboard/settings">
+                            <DropdownMenuItem>
+                                Settings
+                            </DropdownMenuItem>
+                        </Link>
                         <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
                             <Sun className="h-6 w-[1.3rem] dark:hidden" />
                             <Moon className="hidden size-5 dark:block" />
