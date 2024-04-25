@@ -17,7 +17,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import LibrariesTableComponent from "@/components/dashboard/LibrariesTable"
+import LibrariesTableComponent from "@/components/dashboard/DashboardLibrariesTable"
 import ModelsTableComponent from "@/components/dashboard/ModelsTable"
 
 export default function ObjectsTableComponent() {
