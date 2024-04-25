@@ -10,15 +10,25 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { FormDescription } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { createLibrary } from "@/lib/actions/library"
+import { toast } from 'sonner';
 
 interface LibraryCreateProps {
     children: React.ReactNode
 }
 
 export default function LibraryCreate({ children }: LibraryCreateProps) {
+    const onCreate = async () => {
+        try {
+            const result = await createLibrary();
+            toast(result)
+        } catch (err: any) {
+            toast.error(err.toString())
+        }
+    }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -64,7 +74,7 @@ export default function LibraryCreate({ children }: LibraryCreateProps) {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="submit">Create</Button>
+                    <Button onClick={onCreate} type="submit">Create</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
