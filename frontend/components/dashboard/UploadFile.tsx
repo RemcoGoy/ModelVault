@@ -7,14 +7,13 @@ export default function UploadFileComponent() {
             className="sm:col-span-2" x-chunk="dashboard-05-chunk-0"
         >
             <CardHeader className="pb-3">
-                <CardTitle>Your Orders</CardTitle>
+                <CardTitle>Upload a new model</CardTitle>
                 <CardDescription className="max-w-lg text-balance leading-relaxed">
-                    Introducing Our Dynamic Orders Dashboard for Seamless
-                    Management and Insightful Analysis.
+                    Click here to upload your model.
                 </CardDescription>
             </CardHeader>
             <CardFooter>
-                <Button>Create New Order</Button>
+                <Button>Upload model</Button>
             </CardFooter>
         </Card>
     )
