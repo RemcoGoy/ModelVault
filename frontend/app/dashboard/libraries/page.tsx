@@ -31,6 +31,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import LibrariesTable from "@/components/dashboard/libraries/LibrariesTable"
+import LibraryCreate from "@/components/dashboard/libraries/LibraryCreate"
 
 export default function Libraries() {
     return (
@@ -62,12 +63,14 @@ export default function Libraries() {
                                 </DropdownMenuCheckboxItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <Button size="sm" className="h-8 gap-1">
-                            <PlusCircle className="h-3.5 w-3.5" />
-                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                Add Library
-                            </span>
-                        </Button>
+                        <LibraryCreate>
+                            <Button size="sm" className="h-8 gap-1">
+                                <PlusCircle className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                    Add Library
+                                </span>
+                            </Button>
+                        </LibraryCreate>
                     </div>
                 </div>
                 <TabsContent value="all">
