@@ -26,7 +26,7 @@ class SupabaseJWTBearer(HTTPBearer):
             raise HTTPException(status_code=403, detail="Invalid authorization code.")
 
     def verify_jwt(self, jwtoken: str) -> UserResponse:
-        client: Client = SupabaseClientFactory.get_client(jwtoken)
+        client: Client = SupabaseClientFactory.get_client()
         try:
             payload = client.auth.get_user(jwtoken)
         except:

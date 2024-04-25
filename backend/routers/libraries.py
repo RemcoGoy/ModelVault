@@ -15,10 +15,12 @@ async def create_library(
     req: CreateLibraryRequest, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
 ):
     sb_client = SupabaseClientFactory.get_client()
-
     try:
         library_dict = req.model_dump()
         library_dict["tags"] = library_dict["tags"].split(",")
-        return sb_client.table("library").insert(library_dict).execute()
+        return sb_client.table("library").insert(library_dict).execute().data[0]
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        if e.details:
+            raise HTTPException(status_code=400, detail=str(e.details))
+        else:
+            raise HTTPException(status_code=400, detail=str(e))
