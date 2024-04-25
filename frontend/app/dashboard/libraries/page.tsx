@@ -1,3 +1,5 @@
+'use client'
+
 import {
     File,
     ListFilter,
@@ -32,8 +34,31 @@ import {
 } from "@/components/ui/tabs"
 import LibrariesTable from "@/components/dashboard/libraries/LibrariesTable"
 import LibraryCreate from "@/components/dashboard/libraries/LibraryCreate"
+import { useLibraryStore } from "@/lib/stores/libraries"
+import { useEffect } from "react"
+import { getLibraries } from "@/lib/actions/library"
+import { toast } from "sonner"
 
 export default function Libraries() {
+    const setLibraries = useLibraryStore((state) => state.setLibraries)
+    const libraries = useLibraryStore((state) => state.libraries)
+
+    const refreshLibraries = async () => {
+        const { libraries, count, error } = await getLibraries(0, 10);
+
+        if (libraries && count > 0) {
+            setLibraries(libraries)
+        }
+
+        if (error) {
+            toast.error(error)
+        }
+    }
+
+    useEffect(() => {
+        refreshLibraries();
+    }, [])
+
     return (
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <Tabs defaultValue="all">
@@ -82,7 +107,7 @@ export default function Libraries() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <LibrariesTable />
+                            <LibrariesTable libraries={libraries} />
                         </CardContent>
                         <CardFooter>
                             <div className="text-xs text-muted-foreground">

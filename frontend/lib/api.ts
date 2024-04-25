@@ -3,11 +3,11 @@
 import axios from 'axios'
 import { cookies } from 'next/headers'
 
-const api = axios.create({
+export const axiosClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL
 })
 
-api.interceptors.request.use(
+axiosClient.interceptors.request.use(
     (config) => {
         if (config.headers) {
             const token = cookies().get("access_token")?.value;
@@ -18,7 +18,7 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 )
 
-api.interceptors.response.use(
+axiosClient.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
@@ -29,11 +29,11 @@ api.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                const refreshToken = localStorage.getItem('refreshToken');
+                const refreshToken = cookies().get("refresh_token")?.value;
                 const response = await axios.post('/api/auth/refresh', { refreshToken });
                 const { token } = response.data;
 
-                localStorage.setItem('token', token);
+                cookies().set("access_token", token, { path: "/" })
 
                 // Retry the original request with the new token
                 originalRequest.headers.Authorization = `Bearer ${token}`;
@@ -46,5 +46,3 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
-export default api

@@ -23,6 +23,7 @@ export const logIn = async (data: { email: string, password: string }): Promise<
         const resultData: AuthResponse = await result.json();
 
         cookies().set("access_token", resultData.access_token, { path: "/" })
+        cookies().set('refresh_token', resultData.refresh_token, { path: "/" })
 
         return {
             user: {

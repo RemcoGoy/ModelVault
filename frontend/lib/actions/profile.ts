@@ -1,10 +1,10 @@
 'use server'
 
 import { cookies } from "next/headers";
-import api from "@/lib/api";
+import { axiosClient } from "@/lib/api";
 
 export const logOut = async (): Promise<{ result: boolean | null, error: string | null }> => {
-    const result = await api.post("/api/auth/logout")
+    const result = await axiosClient.post("/api/auth/logout")
 
     if (result.status !== 200) {
         const error: { detail: string } = result.data;
@@ -14,6 +14,7 @@ export const logOut = async (): Promise<{ result: boolean | null, error: string 
         }
     } else {
         cookies().delete("access_token")
+        cookies().delete("refresh_token")
 
         return {
             result: true,

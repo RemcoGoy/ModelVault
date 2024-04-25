@@ -1,9 +1,9 @@
 'use server'
 
-import api from "@/lib/api"
+import {axiosClient} from "@/lib/api"
 
 export const updateUser = async (uid: string, username: string): Promise<{updatedUser: any | null, error: string | null}> => {
-    const result = await api.post("/api/users/update", {
+    const result = await axiosClient.post("/api/users/update", {
         uid, username
     })
 
