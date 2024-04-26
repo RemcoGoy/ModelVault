@@ -1,11 +1,12 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "../ui/skeleton";
 
-export default function LibraryCountComponent() {
+export default function LibraryCountComponent({ loading, count }: { loading: boolean, count: number }) {
     return (
         <Card x-chunk="dashboard-05-chunk-1">
             <CardHeader className="pb-2">
                 <CardDescription>Libraries</CardDescription>
-                <CardTitle className="text-4xl">12</CardTitle>
+                {loading ? <Skeleton className="h-10 w-[50px]" /> : <CardTitle className="text-4xl">{count}</CardTitle>}
             </CardHeader>
             <CardContent>
                 <div className="text-xs text-muted-foreground">
