@@ -1,13 +1,10 @@
 'use client'
 
 import {
-    File,
     ListFilter,
-    MoreHorizontal,
     PlusCircle,
 } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -21,7 +18,6 @@ import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
@@ -38,7 +34,7 @@ import { useLibraryStore } from "@/lib/stores/libraries"
 import { useEffect, useState } from "react"
 import { getLibraries } from "@/lib/actions/library"
 import { toast } from "sonner"
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 export default function Libraries() {
     const setLibraries = useLibraryStore((state) => state.setLibraries)
