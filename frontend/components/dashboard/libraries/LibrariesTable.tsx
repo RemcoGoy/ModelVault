@@ -19,8 +19,9 @@ import {
 import { Button } from "@/components/ui/button"
 import { Library } from "@/types/library"
 import { Badge } from "@/components/ui/badge"
+import { toast } from "sonner"
 
-export default function LibrariesTable({ libraries }: { libraries: Library[] }) {
+export default function LibrariesTable({ libraries, onDelete }: { libraries: Library[], onDelete: (id: number) => void }) {
     return (
         <Table>
             <TableHeader>
@@ -75,7 +76,7 @@ export default function LibrariesTable({ libraries }: { libraries: Library[] }) 
                                     <DropdownMenuContent align="end">
                                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => onDelete(library.id)}>Delete</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>

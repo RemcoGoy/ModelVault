@@ -32,7 +32,7 @@ import LibrariesTable from "@/components/dashboard/libraries/LibrariesTable"
 import LibraryCreate from "@/components/dashboard/libraries/LibraryCreate"
 import { useLibraryStore } from "@/lib/stores/libraries"
 import { useEffect, useState } from "react"
-import { createLibrary, getLibraries } from "@/lib/actions/library"
+import { createLibrary, deleteLibrary, getLibraries } from "@/lib/actions/library"
 import { toast } from "sonner"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
@@ -60,6 +60,23 @@ export default function Libraries() {
             if (library) {
                 toast.success("Library created")
                 setCreateOpen(false)
+                refreshLibraries(skip, limit)
+            }
+
+            if (error) {
+                toast.error(error)
+            }
+        } catch (err: any) {
+            toast.error(err.toString())
+        }
+    }
+
+    const onDelete = async (id: number) => {
+        try {
+            const { result, error } = await deleteLibrary(id);
+
+            if (result) {
+                toast.success("Library deleted")
                 refreshLibraries(skip, limit)
             }
 
@@ -147,7 +164,7 @@ export default function Libraries() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <LibrariesTable libraries={libraries} />
+                            <LibrariesTable libraries={libraries} onDelete={onDelete} />
                         </CardContent>
                         <CardFooter>
                             <Pagination>

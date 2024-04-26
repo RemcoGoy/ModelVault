@@ -49,3 +49,20 @@ export const getLibraries = async (skip: number, limit: number): Promise<{ libra
         }
     }
 }
+
+export const deleteLibrary = async (id: number): Promise<{ result: boolean | null, error: string | null }> => {
+    const result = await axiosClient.delete(`/api/libraries/${id}`);
+
+    if (result.status !== 200) {
+        const error: { detail: string } = result.data;
+        return {
+            result: null,
+            error: error.detail
+        }
+    } else {
+        return {
+            result: true,
+            error: null
+        }
+    }
+}
