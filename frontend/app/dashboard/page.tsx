@@ -19,8 +19,7 @@ export default function Dashboard() {
   const refreshLibraries = async (skip: number = 0, limit: number = 10) => {
     const { libraries, count, error } = await getLibraries(skip, limit);
 
-    if (libraries && count > 0) {
-      setLibraries(libraries)
+    if (count > 0) {
       setLibraryCount(count)
     }
 
@@ -44,7 +43,7 @@ export default function Dashboard() {
           <LibraryCountComponent loading={loading} count={libraryCount} />
           <ModelCountComponent />
         </div>
-        <ObjectsTableComponent />
+        {/* <ObjectsTableComponent /> */}
       </div>
     </main >
   );
