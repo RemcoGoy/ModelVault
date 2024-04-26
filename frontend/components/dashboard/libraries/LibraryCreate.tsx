@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createLibrary } from "@/lib/actions/library"
+import { useState } from "react"
 import { toast } from 'sonner';
 
 interface LibraryCreateProps {
@@ -20,18 +21,32 @@ interface LibraryCreateProps {
 }
 
 export default function LibraryCreate({ children }: LibraryCreateProps) {
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const [name, setName] = useState("");
+    const [path, setPath] = useState("");
+    const [tags, setTags] = useState("");
+
     const onCreate = async () => {
         try {
-            const result = await createLibrary();
-            toast(result)
+            const { library, error } = await createLibrary(name, path, tags);
+
+            if (library) {
+                toast.success("Library created")
+                setDialogOpen(false)
+            }
+
+            if (error) {
+                toast.error(error)
+            }
         } catch (err: any) {
             toast.error(err.toString())
         }
     }
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
+        <Dialog open={dialogOpen}>
+            <DialogTrigger asChild onClick={() => setDialogOpen(true)}>
                 {children}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -50,6 +65,8 @@ export default function LibraryCreate({ children }: LibraryCreateProps) {
                             id="name"
                             defaultValue="TestLibrary"
                             className="col-span-3"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
@@ -60,6 +77,8 @@ export default function LibraryCreate({ children }: LibraryCreateProps) {
                             id="path"
                             defaultValue="/test"
                             className="col-span-3"
+                            value={path}
+                            onChange={(e) => setPath(e.target.value)}
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
@@ -70,6 +89,8 @@ export default function LibraryCreate({ children }: LibraryCreateProps) {
                             id="tags"
                             placeholder="tags,seperated,with,comma"
                             className="col-span-3"
+                            value={tags}
+                            onChange={(e) => setTags(e.target.value)}
                         />
                     </div>
                 </div>

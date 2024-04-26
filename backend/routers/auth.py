@@ -62,7 +62,7 @@ async def register(req: RegisterRequest) -> AuthResponse:
 
 
 @router.post("/refresh")
-async def refresh(req: RefreshRequest) -> AuthResponse:
+async def refresh(req: RefreshRequest):
     sb_client: Client = SupabaseClientFactory.get_client()
 
     try:

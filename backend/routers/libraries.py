@@ -14,7 +14,7 @@ router = APIRouter(prefix="/libraries", tags=["libraries"])
 async def create_library(
     req: CreateLibraryRequest, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
 ):
-    sb_client = SupabaseClientFactory.get_client()
+    sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
 
     try:
         library_dict = req.model_dump()

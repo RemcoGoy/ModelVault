@@ -29,14 +29,16 @@ axiosClient.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                const refreshToken = cookies().get("refresh_token")?.value;
-                const response = await axios.post('/api/auth/refresh', { refreshToken });
-                const { token } = response.data;
+                const rt = cookies().get("refresh_token")?.value;
+                const refreshUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/refresh`;
+                const response = await axios.post(refreshUrl, { refresh_token: rt });
+                const { access_token, refresh_token } = response.data;
 
-                cookies().set("access_token", token, { path: "/" })
+                cookies().set("access_token", access_token, { path: "/" })
+                cookies().set("refresh_token", refresh_token, { path: "/" })
 
                 // Retry the original request with the new token
-                originalRequest.headers.Authorization = `Bearer ${token}`;
+                originalRequest.headers.Authorization = `Bearer ${access_token}`;
                 return axios(originalRequest);
             } catch (error) {
                 // Handle refresh token error or redirect to login
