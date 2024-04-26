@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Library } from "@/types/library"
+import { Badge } from "@/components/ui/badge"
 
 export default function LibrariesTable({ libraries }: { libraries: Library[] }) {
     return (
@@ -27,6 +28,7 @@ export default function LibrariesTable({ libraries }: { libraries: Library[] }) 
                     <TableHead>ID</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Path</TableHead>
+                    <TableHead>Tags</TableHead>
                     <TableHead className="hidden md:table-cell">
                         Created at
                     </TableHead>
@@ -47,6 +49,13 @@ export default function LibrariesTable({ libraries }: { libraries: Library[] }) 
                             </TableCell>
                             <TableCell>
                                 {library.path}
+                            </TableCell>
+                            <TableCell>
+                                {library.tags.map(tag => {
+                                    return (
+                                        <Badge key={tag} variant="outline">{tag}</Badge>
+                                    )
+                                })}
                             </TableCell>
                             <TableCell>
                                 {library.created_at.toLocaleString("en-BE")}

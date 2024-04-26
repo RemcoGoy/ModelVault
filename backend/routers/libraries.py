@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 
 from schemas.auth import AuthSchema
-from schemas.libraries import CreateLibraryRequest, GetLibrariesRequest
+from schemas.libraries import CreateLibraryRequest, LibraryAPIResponse
 from utils.supabase import SupabaseClientFactory
 from utils.supabase_jwt import SupabaseJWTBearer
 
@@ -32,18 +32,21 @@ async def get_libraries(
     skip: int = 0,
     limit: int = 10,
     auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())] = None,
-):
-    sb_client = SupabaseClientFactory.get_client()
+) -> LibraryAPIResponse:
+    sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
 
     try:
-        return (
+        libraries = (
             sb_client.table("library")
             .select("*", count="exact")
-            .range(skip, skip + limit)
+            .order("id", desc=False)
+            .range(skip, skip + limit - 1)
             .execute()
+            .data
         )
+
+        count = sb_client.table("library").select("*", count="exact").execute().count
+
+        return LibraryAPIResponse(data=libraries, count=count)
     except Exception as e:
-        if e.details:
-            raise HTTPException(status_code=400, detail=str(e.details))
-        else:
-            raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))

@@ -17,13 +17,13 @@ class SupabaseJWTBearer(HTTPBearer):
         )
         if credentials:
             if not credentials.scheme == "Bearer":
-                raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
+                raise HTTPException(status_code=401, detail="Invalid authentication scheme.")
             user_jwt = self.verify_jwt(credentials.credentials)
             if not user_jwt:
-                raise HTTPException(status_code=403, detail="Invalid token or expired token.")
+                raise HTTPException(status_code=401, detail="Invalid token or expired token.")
             return AuthSchema(user=user_jwt.user, access_token=credentials.credentials)
         else:
-            raise HTTPException(status_code=403, detail="Invalid authorization code.")
+            raise HTTPException(status_code=401, detail="Invalid authorization code.")
 
     def verify_jwt(self, jwtoken: str) -> UserResponse:
         client: Client = SupabaseClientFactory.get_client()

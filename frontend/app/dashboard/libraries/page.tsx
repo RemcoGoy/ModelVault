@@ -35,25 +35,49 @@ import {
 import LibrariesTable from "@/components/dashboard/libraries/LibrariesTable"
 import LibraryCreate from "@/components/dashboard/libraries/LibraryCreate"
 import { useLibraryStore } from "@/lib/stores/libraries"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { getLibraries } from "@/lib/actions/library"
 import { toast } from "sonner"
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 export default function Libraries() {
     const setLibraries = useLibraryStore((state) => state.setLibraries)
+    const setCount = useLibraryStore((state) => state.setCount)
     const libraries = useLibraryStore((state) => state.libraries)
+    const count = useLibraryStore((state) => state.count)
 
-    const refreshLibraries = async () => {
-        const { libraries, count, error } = await getLibraries(0, 10);
+    const [skip, setSkip] = useState(0)
+    const [limit, setLimit] = useState(10)
+
+    const [pages, setPages] = useState([{
+        "skip": 0,
+        "limit": 10
+    }])
+    const [activeIndex, setActiveIndes] = useState(0)
+
+    const refreshLibraries = async (skip: number = 0, limit: number = 10) => {
+        const { libraries, count, error } = await getLibraries(skip, limit);
 
         if (libraries && count > 0) {
             setLibraries(libraries)
+            setCount(count)
         }
 
         if (error) {
             toast.error(error)
         }
     }
+
+    useEffect(() => {
+        const pages = []
+        for (let i = 0; i < count; i += 10) {
+            pages.push({
+                "skip": i,
+                "limit": 10
+            })
+        }
+        setPages(pages)
+    }, [count])
 
     useEffect(() => {
         refreshLibraries();
@@ -110,8 +134,44 @@ export default function Libraries() {
                             <LibrariesTable libraries={libraries} />
                         </CardContent>
                         <CardFooter>
-                            <div className="text-xs text-muted-foreground">
-                                Showing <strong>1-10</strong> of <strong>32</strong>{" "}products
+                            <Pagination>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious onClick={() => {
+                                            if (activeIndex > 0) {
+                                                setSkip(skip - limit)
+                                                setActiveIndes(activeIndex - 1)
+                                                refreshLibraries(skip - limit, limit)
+                                            }
+                                        }} />
+                                    </PaginationItem>
+                                    {pages.map((page, index) => {
+                                        return (
+                                            <PaginationItem key={page.skip}>
+                                                <PaginationLink onClick={() => {
+                                                    setSkip(page.skip)
+                                                    setActiveIndes(index)
+                                                    refreshLibraries(page.skip, page.limit)
+                                                }} isActive={index == activeIndex}>{index + 1}</PaginationLink>
+                                            </PaginationItem>
+                                        )
+                                    })}
+                                    <PaginationItem>
+                                        <PaginationEllipsis />
+                                    </PaginationItem>
+                                    <PaginationItem>
+                                        <PaginationNext onClick={() => {
+                                            if (activeIndex + 1 < pages.length) {
+                                                setSkip(skip + limit)
+                                                setActiveIndes(activeIndex + 1)
+                                                refreshLibraries(skip + limit, limit)
+                                            }
+                                        }} />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+                            <div className="text-xs text-muted-foreground w-48">
+                                Showing <strong>{skip + 1}-{Math.min(skip + limit, count)}</strong> of <strong>{count}</strong>{" "}products
                             </div>
                         </CardFooter>
                     </Card>
