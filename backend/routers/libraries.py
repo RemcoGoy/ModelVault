@@ -36,18 +36,26 @@ async def get_libraries(
     sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
 
     try:
-        libraries = (
-            sb_client.table("library")
-            .select("*", count="exact")
-            .order("id", desc=False)
-            .range(skip, skip + limit - 1)
-            .execute()
-            .data
-        )
+        if limit == -1:
+            return (
+                sb_client.table("library")
+                .select("*", count="exact")
+                .order("id", desc=False)
+                .execute()
+            )
+        else:
+            libraries = (
+                sb_client.table("library")
+                .select("*", count="exact")
+                .order("id", desc=False)
+                .range(skip, skip + limit - 1)
+                .execute()
+                .data
+            )
 
-        count = sb_client.table("library").select("*", count="exact").execute().count
+            count = sb_client.table("library").select("*", count="exact").execute().count
 
-        return LibraryAPIResponse(data=libraries, count=count)
+            return LibraryAPIResponse(data=libraries, count=count)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
