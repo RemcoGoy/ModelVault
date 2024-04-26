@@ -157,9 +157,6 @@ export default function Libraries() {
                                         )
                                     })}
                                     <PaginationItem>
-                                        <PaginationEllipsis />
-                                    </PaginationItem>
-                                    <PaginationItem>
                                         <PaginationNext onClick={() => {
                                             if (activeIndex + 1 < pages.length) {
                                                 setSkip(skip + limit)
