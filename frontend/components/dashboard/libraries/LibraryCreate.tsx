@@ -17,35 +17,19 @@ import { useState } from "react"
 import { toast } from 'sonner';
 
 interface LibraryCreateProps {
+    onCreate: (name: string, path: string, tags: string) => void
+    dialogOpen: boolean
+    setDialogOpen: (open: boolean) => void
     children: React.ReactNode
 }
 
-export default function LibraryCreate({ children }: LibraryCreateProps) {
-    const [dialogOpen, setDialogOpen] = useState(false);
-
+export default function LibraryCreate({ children, onCreate, dialogOpen, setDialogOpen }: LibraryCreateProps) {
     const [name, setName] = useState("");
     const [path, setPath] = useState("");
     const [tags, setTags] = useState("");
 
-    const onCreate = async () => {
-        try {
-            const { library, error } = await createLibrary(name, path, tags);
-
-            if (library) {
-                toast.success("Library created")
-                setDialogOpen(false)
-            }
-
-            if (error) {
-                toast.error(error)
-            }
-        } catch (err: any) {
-            toast.error(err.toString())
-        }
-    }
-
     return (
-        <Dialog open={dialogOpen}>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild onClick={() => setDialogOpen(true)}>
                 {children}
             </DialogTrigger>
@@ -95,7 +79,7 @@ export default function LibraryCreate({ children }: LibraryCreateProps) {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={onCreate} type="submit">Create</Button>
+                    <Button onClick={() => onCreate(name, path, tags)} type="submit">Create</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

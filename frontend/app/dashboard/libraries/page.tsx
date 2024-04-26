@@ -32,7 +32,7 @@ import LibrariesTable from "@/components/dashboard/libraries/LibrariesTable"
 import LibraryCreate from "@/components/dashboard/libraries/LibraryCreate"
 import { useLibraryStore } from "@/lib/stores/libraries"
 import { useEffect, useState } from "react"
-import { getLibraries } from "@/lib/actions/library"
+import { createLibrary, getLibraries } from "@/lib/actions/library"
 import { toast } from "sonner"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
@@ -42,6 +42,8 @@ export default function Libraries() {
     const libraries = useLibraryStore((state) => state.libraries)
     const count = useLibraryStore((state) => state.count)
 
+    const [createOpen, setCreateOpen] = useState(false)
+
     const [skip, setSkip] = useState(0)
     const [limit, setLimit] = useState(10)
 
@@ -50,6 +52,24 @@ export default function Libraries() {
         "limit": 10
     }])
     const [activeIndex, setActiveIndes] = useState(0)
+
+    const onCreate = async (name: string, path: string, tags: string) => {
+        try {
+            const { library, error } = await createLibrary(name, path, tags);
+
+            if (library) {
+                toast.success("Library created")
+                setCreateOpen(false)
+                refreshLibraries(skip, limit)
+            }
+
+            if (error) {
+                toast.error(error)
+            }
+        } catch (err: any) {
+            toast.error(err.toString())
+        }
+    }
 
     const refreshLibraries = async (skip: number = 0, limit: number = 10) => {
         const { libraries, count, error } = await getLibraries(skip, limit);
@@ -108,7 +128,7 @@ export default function Libraries() {
                                 </DropdownMenuCheckboxItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <LibraryCreate>
+                        <LibraryCreate onCreate={onCreate} dialogOpen={createOpen} setDialogOpen={setCreateOpen}>
                             <Button size="sm" className="h-8 gap-1">
                                 <PlusCircle className="h-3.5 w-3.5" />
                                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
