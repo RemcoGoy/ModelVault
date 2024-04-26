@@ -10,7 +10,7 @@ from utils.supabase_jwt import SupabaseJWTBearer
 router = APIRouter(prefix="/libraries", tags=["libraries"])
 
 
-@router.post("/create")
+@router.post("/")
 async def create_library(
     req: CreateLibraryRequest, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
 ):
@@ -48,5 +48,22 @@ async def get_libraries(
         count = sb_client.table("library").select("*", count="exact").execute().count
 
         return LibraryAPIResponse(data=libraries, count=count)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.delete("/{library_id}")
+async def delete_library(
+    library_id: int, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
+) -> bool:
+    sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
+
+    try:
+        res = sb_client.table("library").delete(count="exact").eq("id", library_id).execute()
+
+        if res.count == 0:
+            raise HTTPException(status_code=404, detail="Library not found")
+        else:
+            return True
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
