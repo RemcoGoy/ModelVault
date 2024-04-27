@@ -1,3 +1,4 @@
+import os
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -15,16 +16,26 @@ async def create_library(
     req: CreateLibraryRequest, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
 ):
     sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
+    LIBRARIES_PATH = os.getenv("LIBRARIES_PATH")  # TODO: Make setting
 
     try:
+        library_path = os.path.join(LIBRARIES_PATH, req.folder_name)
+        if not LIBRARIES_PATH in library_path:
+            raise HTTPException(status_code=400, detail="Invalid path configuration")
+
+        if not os.path.exists(library_path):
+            try:
+                os.mkdir(library_path)
+            except OSError as err:
+                raise err
+
         library_dict = req.model_dump()
         library_dict["tags"] = library_dict["tags"].split(",")
+        library_dict["path"] = library_path
+        del library_dict["folder_name"]
         return sb_client.table("library").insert(library_dict).execute().data[0]
     except Exception as e:
-        if e.details:
-            raise HTTPException(status_code=400, detail=str(e.details))
-        else:
-            raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.get("/")

@@ -25,7 +25,7 @@ interface LibraryCreateProps {
 
 export default function LibraryCreate({ children, onCreate, dialogOpen, setDialogOpen }: LibraryCreateProps) {
     const [name, setName] = useState("");
-    const [path, setPath] = useState("");
+    const [folderName, setFolderName] = useState("");
     const [tags, setTags] = useState("");
 
     return (
@@ -41,8 +41,8 @@ export default function LibraryCreate({ children, onCreate, dialogOpen, setDialo
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
+                    <div className="grid grid-cols-5 items-center gap-4">
+                        <Label htmlFor="name" className="text-right col-span-2">
                             Name
                         </Label>
                         <Input
@@ -53,20 +53,20 @@ export default function LibraryCreate({ children, onCreate, dialogOpen, setDialo
                             onChange={(e) => setName(e.target.value)}
                         />
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="path" className="text-right">
-                            Path
+                    <div className="grid grid-cols-5 items-center gap-4">
+                        <Label htmlFor="folderName" className="text-right col-span-2">
+                            Folder name
                         </Label>
                         <Input
-                            id="path"
-                            defaultValue="/test"
+                            id="folderName"
+                            defaultValue="test"
                             className="col-span-3"
-                            value={path}
-                            onChange={(e) => setPath(e.target.value)}
+                            value={folderName}
+                            onChange={(e) => setFolderName(e.target.value)}
                         />
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="tags" className="text-right">
+                    <div className="grid grid-cols-5 items-center gap-4">
+                        <Label htmlFor="tags" className="text-right col-span-2">
                             Tags
                         </Label>
                         <Input
@@ -79,7 +79,7 @@ export default function LibraryCreate({ children, onCreate, dialogOpen, setDialo
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={() => onCreate(name, path, tags)} type="submit">Create</Button>
+                    <Button onClick={() => onCreate(name, folderName, tags)} type="submit">Create</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
