@@ -21,7 +21,10 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { Library } from "@/types/library"
+import { getLibraries } from "@/lib/actions/library"
+import { toast } from "sonner"
 
 interface ModelCreateProps {
     onCreate: (name: string, file_name: string, library_id: number) => void
@@ -33,7 +36,26 @@ interface ModelCreateProps {
 export default function ModelCreate({ children, onCreate, dialogOpen, setDialogOpen }: ModelCreateProps) {
     const [name, setName] = useState("")
     const [fileName, setFileName] = useState("")
-    const [libraryId, setLibraryId] = useState(-1)
+    const [libraryId, setLibraryId] = useState("-1")
+    const [libraries, setLibraries] = useState<Library[]>([])
+
+    const fetchLibraries = async () => {
+        const { libraries, count, error } = await getLibraries(0, -1);
+
+        if (libraries && count > 0) {
+            setLibraries(libraries)
+        }
+
+        if (error) {
+            toast.error(error)
+        }
+    }
+
+    useEffect(() => {
+        if (dialogOpen === true) {
+            fetchLibraries();
+        }
+    }, [dialogOpen])
 
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -67,42 +89,38 @@ export default function ModelCreate({ children, onCreate, dialogOpen, setDialogO
                         <Input
                             id="name"
                             type="file"
-                            defaultValue="TestModel"
+                            // defaultValue="TestModel"
                             className="col-span-3"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                        // value={name}
+                        // onChange={(e) => setName(e.target.value)}
                         />
                     </div>
                     <div className="grid grid-cols-5 items-center gap-4">
-                        <Label htmlFor="name" className="text-right col-span-2">
+                        <Label htmlFor="library" className="text-right col-span-2">
                             Library
                         </Label>
-                        <Select>
+                        <Select
+                            value={libraryId}
+                            onValueChange={(e) => setLibraryId(e)}
+                        >
                             <SelectTrigger className="col-span-3">
-                                <SelectValue placeholder="Select a fruit" />
+                                <SelectValue placeholder="Select a library" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectLabel>Fruits</SelectLabel>
-                                    <SelectItem value="apple">Apple</SelectItem>
-                                    <SelectItem value="banana">Banana</SelectItem>
-                                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                                    <SelectItem value="grapes">Grapes</SelectItem>
-                                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                                    <SelectLabel>Libraries</SelectLabel>
+                                    {libraries.map((library) => {
+                                        return (
+                                            <SelectItem key={library.id} value={library.id.toString()}>{library.name}</SelectItem>
+                                        )
+                                    })}
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
-                        {/* <Input
-                            id="name"
-                            defaultValue="TestModel"
-                            className="col-span-3"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        /> */}
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={() => onCreate(name, fileName, libraryId)} type="submit">Create</Button>
+                    <Button onClick={() => onCreate(name, fileName, parseInt(libraryId))} type="submit">Create</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
