@@ -5,7 +5,8 @@ import {
     Home,
     Settings,
     Vault,
-    Library
+    Library,
+    FileBox
 } from "lucide-react"
 
 import {
@@ -25,6 +26,11 @@ const sidebarItems = [
         "title": "Libraries",
         "path": "/dashboard/libraries",
         "icon": <Library className="h-5 w-5" />
+    },
+    {
+        "title": "Models",
+        "path": "/dashboard/models",
+        "icon": <FileBox className="h-5 w-5" />
     }
 ]
 

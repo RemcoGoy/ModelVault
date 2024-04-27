@@ -17,19 +17,16 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Library } from "@/types/library"
-import { Badge } from "@/components/ui/badge"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { Model } from "@/types/model"
 
-export default function LibrariesTable({ libraries, onDelete }: { libraries: Library[], onDelete: (id: number) => void }) {
+export default function ModelsTable({ models, onDelete }: { models: Model[], onDelete: (id: number) => void }) {
     return (
         <Table>
             <TableHeader>
                 <TableRow>
                     <TableHead>ID</TableHead>
                     <TableHead>Name</TableHead>
-                    <TableHead>Path</TableHead>
-                    <TableHead>Tags</TableHead>
                     <TableHead className="hidden md:table-cell">
                         Created at
                     </TableHead>
@@ -39,27 +36,17 @@ export default function LibrariesTable({ libraries, onDelete }: { libraries: Lib
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {libraries.map((library) => {
+                {models.map((model) => {
                     return (
-                        <TableRow key={library.id}>
+                        <TableRow key={model.id}>
                             <TableCell className="font-medium">
-                                {library.id}
+                                {model.id}
                             </TableCell>
                             <TableCell>
-                                {library.name}
+                                {model.name}
                             </TableCell>
                             <TableCell>
-                                {library.path}
-                            </TableCell>
-                            <TableCell>
-                                {library.tags.map(tag => {
-                                    return (
-                                        <Badge key={tag} variant="outline">{tag}</Badge>
-                                    )
-                                })}
-                            </TableCell>
-                            <TableCell>
-                                {library.created_at.toLocaleString("en-BE")}
+                                {model.created_at.toLocaleString("en-BE")}
                             </TableCell>
                             <AlertDialog>
                                 <TableCell>
@@ -94,7 +81,7 @@ export default function LibrariesTable({ libraries, onDelete }: { libraries: Lib
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction onClick={() => onDelete(library.id)}>Continue</AlertDialogAction>
+                                        <AlertDialogAction onClick={() => onDelete(model.id)}>Continue</AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
                             </AlertDialog>

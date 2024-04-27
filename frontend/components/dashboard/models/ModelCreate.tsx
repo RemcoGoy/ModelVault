@@ -14,14 +14,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 
-interface LibraryCreateProps {
+interface ModelCreateProps {
     onCreate: (name: string, path: string, tags: string) => void
     dialogOpen: boolean
     setDialogOpen: (open: boolean) => void
     children: React.ReactNode
 }
 
-export default function LibraryCreate({ children, onCreate, dialogOpen, setDialogOpen }: LibraryCreateProps) {
+export default function ModelCreate({ children, onCreate, dialogOpen, setDialogOpen }: ModelCreateProps) {
     const [name, setName] = useState("");
     const [folderName, setFolderName] = useState("");
     const [tags, setTags] = useState("");
@@ -33,9 +33,9 @@ export default function LibraryCreate({ children, onCreate, dialogOpen, setDialo
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Create library</DialogTitle>
+                    <DialogTitle>Create model</DialogTitle>
                     <DialogDescription>
-                        Create a new library to save models to
+                        Create a new model
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -45,34 +45,10 @@ export default function LibraryCreate({ children, onCreate, dialogOpen, setDialo
                         </Label>
                         <Input
                             id="name"
-                            defaultValue="TestLibrary"
+                            defaultValue="TestModel"
                             className="col-span-3"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                        />
-                    </div>
-                    <div className="grid grid-cols-5 items-center gap-4">
-                        <Label htmlFor="folderName" className="text-right col-span-2">
-                            Folder name
-                        </Label>
-                        <Input
-                            id="folderName"
-                            defaultValue="test"
-                            className="col-span-3"
-                            value={folderName}
-                            onChange={(e) => setFolderName(e.target.value)}
-                        />
-                    </div>
-                    <div className="grid grid-cols-5 items-center gap-4">
-                        <Label htmlFor="tags" className="text-right col-span-2">
-                            Tags
-                        </Label>
-                        <Input
-                            id="tags"
-                            placeholder="tags,seperated,with,comma"
-                            className="col-span-3"
-                            value={tags}
-                            onChange={(e) => setTags(e.target.value)}
                         />
                     </div>
                 </div>
