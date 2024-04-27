@@ -10,21 +10,30 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 
 interface ModelCreateProps {
-    onCreate: (name: string, path: string, tags: string) => void
+    onCreate: (name: string, file_name: string, library_id: number) => void
     dialogOpen: boolean
     setDialogOpen: (open: boolean) => void
     children: React.ReactNode
 }
 
 export default function ModelCreate({ children, onCreate, dialogOpen, setDialogOpen }: ModelCreateProps) {
-    const [name, setName] = useState("");
-    const [folderName, setFolderName] = useState("");
-    const [tags, setTags] = useState("");
+    const [name, setName] = useState("")
+    const [fileName, setFileName] = useState("")
+    const [libraryId, setLibraryId] = useState(-1)
 
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -51,9 +60,49 @@ export default function ModelCreate({ children, onCreate, dialogOpen, setDialogO
                             onChange={(e) => setName(e.target.value)}
                         />
                     </div>
+                    <div className="grid grid-cols-5 items-center gap-4">
+                        <Label htmlFor="name" className="text-right col-span-2">
+                            File
+                        </Label>
+                        <Input
+                            id="name"
+                            type="file"
+                            defaultValue="TestModel"
+                            className="col-span-3"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+                    <div className="grid grid-cols-5 items-center gap-4">
+                        <Label htmlFor="name" className="text-right col-span-2">
+                            Library
+                        </Label>
+                        <Select>
+                            <SelectTrigger className="col-span-3">
+                                <SelectValue placeholder="Select a fruit" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Fruits</SelectLabel>
+                                    <SelectItem value="apple">Apple</SelectItem>
+                                    <SelectItem value="banana">Banana</SelectItem>
+                                    <SelectItem value="blueberry">Blueberry</SelectItem>
+                                    <SelectItem value="grapes">Grapes</SelectItem>
+                                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        {/* <Input
+                            id="name"
+                            defaultValue="TestModel"
+                            className="col-span-3"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        /> */}
+                    </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={() => onCreate(name, folderName, tags)} type="submit">Create</Button>
+                    <Button onClick={() => onCreate(name, fileName, libraryId)} type="submit">Create</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

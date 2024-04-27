@@ -31,6 +31,7 @@ import { ListFilter, PlusCircle } from "lucide-react"
 import { useModelStore } from "@/lib/stores/models"
 import ModelCreate from "@/components/dashboard/models/ModelCreate"
 import ModelsTable from "@/components/dashboard/models/ModelsTable"
+import { createModel, deleteModel, getModels } from "@/lib/actions/models"
 
 export default function Models() {
     const setModels = useModelStore((state) => state.setModels)
@@ -49,13 +50,62 @@ export default function Models() {
     }])
     const [activeIndex, setActiveIndes] = useState(0)
 
-    const onCreate = async (): Promise<void> => { }
-    const onDelete = async (id: number): Promise<void> => { }
+    const onCreate = async (name: string, file_name: string, library_id: number): Promise<void> => {
+        try {
+            const { model, error } = await createModel(name, file_name, library_id);
 
-    const refreshModels = async (skip: number = 0, limit: number = 10) => { }
+            if (model) {
+                toast.success("Model created")
+                setCreateOpen(false)
+                refreshModels(skip, limit)
+            }
+
+            if (error) {
+                toast.error(error)
+            }
+        } catch (err: any) {
+            toast.error(err.toString())
+        }
+    }
+    const onDelete = async (id: number): Promise<void> => {
+        try {
+            const { result, error } = await deleteModel(id);
+
+            if (result) {
+                toast.success("Library deleted")
+                refreshModels(skip, limit)
+            }
+
+            if (error) {
+                toast.error(error)
+            }
+        } catch (err: any) {
+            toast.error(err.toString())
+        }
+    }
+
+    const refreshModels = async (skip: number = 0, limit: number = 10) => {
+        const { models, count, error } = await getModels(skip, limit);
+
+        if (models && count > 0) {
+            setModels(models)
+            setCount(count)
+        }
+
+        if (error) {
+            toast.error(error)
+        }
+    }
 
     useEffect(() => {
-
+        const pages = []
+        for (let i = 0; i < count; i += 10) {
+            pages.push({
+                "skip": i,
+                "limit": 10
+            })
+        }
+        setPages(pages)
     }, [count])
 
     useEffect(() => {
