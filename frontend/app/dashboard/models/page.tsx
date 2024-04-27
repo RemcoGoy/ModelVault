@@ -53,7 +53,7 @@ export default function Models() {
     const onCreate = async (name: string, files: FileList | null, library_id: number): Promise<void> => {
         if (files) {
             try {
-                const { model, error } = await createModel(name, files, library_id);
+                const { model, error } = await createModel(name, library_id);
 
                 if (model) {
                     toast.success("Model created")
