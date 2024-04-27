@@ -3,10 +3,10 @@
 import { axiosClient } from "@/lib/api";
 import { Model } from "@/types/model";
 
-export const createModel = async (name: string, file_name: string, library_id: number): Promise<{ model: Model | null, error: string | null }> => {
+export const createModel = async (name: string, files: FileList, library_id: number): Promise<{ model: Model | null, error: string | null }> => {
     const result = await axiosClient.post(`/api/models/`, {
         name,
-        file_name,
+        // file_name,
         library_id
     });
 

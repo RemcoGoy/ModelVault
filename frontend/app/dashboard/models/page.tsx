@@ -50,21 +50,25 @@ export default function Models() {
     }])
     const [activeIndex, setActiveIndes] = useState(0)
 
-    const onCreate = async (name: string, file_name: string, library_id: number): Promise<void> => {
-        try {
-            const { model, error } = await createModel(name, file_name, library_id);
+    const onCreate = async (name: string, files: FileList | null, library_id: number): Promise<void> => {
+        if (files) {
+            try {
+                const { model, error } = await createModel(name, files, library_id);
 
-            if (model) {
-                toast.success("Model created")
-                setCreateOpen(false)
-                refreshModels(skip, limit)
-            }
+                if (model) {
+                    toast.success("Model created")
+                    setCreateOpen(false)
+                    refreshModels(skip, limit)
+                }
 
-            if (error) {
-                toast.error(error)
+                if (error) {
+                    toast.error(error)
+                }
+            } catch (err: any) {
+                toast.error(err.toString())
             }
-        } catch (err: any) {
-            toast.error(err.toString())
+        } else {
+            toast.error("Please add files to upload")
         }
     }
     const onDelete = async (id: number): Promise<void> => {
