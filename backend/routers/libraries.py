@@ -16,7 +16,7 @@ async def create_library(
     req: CreateLibraryRequest, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
 ):
     sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
-    LIBRARIES_PATH = os.getenv("LIBRARIES_PATH")  # TODO: Make setting
+    LIBRARIES_PATH = os.getenv("LIBRARIES_PATH")
 
     try:
         library_path = os.path.join(LIBRARIES_PATH, req.folder_name)

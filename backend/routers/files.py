@@ -1,4 +1,6 @@
-from fastapi import APIRouter, UploadFile
+import os
+
+from fastapi import APIRouter, HTTPException, UploadFile
 
 from utils.supabase import SupabaseClientFactory
 
@@ -9,4 +11,25 @@ router = APIRouter(prefix="/files", tags=["files"])
 async def upload_file(file_id: int, file_upload: UploadFile):
     sb_client = SupabaseClientFactory.get_client()
 
-    return {"filename": file_upload.filename}
+    try:
+        file = sb_client.table("file").select("*").eq("id", file_id).execute().data[0]
+        model = sb_client.table("model").select("*").eq("id", file["model_id"]).execute().data[0]
+        library = (
+            sb_client.table("library").select("*").eq("id", model["library_id"]).execute().data[0]
+        )
+
+        STORE_FILES = os.getenv("STORE_FILES", "local")
+
+        file_path = None
+        if STORE_FILES == "local":
+            file_path = os.path.join(library["path"], file_upload.filename)
+            with open(file_path, "wb") as buffer:
+                buffer.write(file_upload.file.read())
+        elif STORE_FILES == "supabase":
+            raise NotImplementedError()
+        else:
+            raise Exception("Invalid STORE_FILES configuration")
+
+        return sb_client.table("file").update({"path": file_path}).eq("id", file_id).execute()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
