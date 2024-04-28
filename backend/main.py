@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import auth, libraries, models, users
+from routers import auth, files, libraries, models, users
 
 load_dotenv()
 
@@ -29,6 +29,7 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 app.include_router(libraries.router, prefix="/api")
 app.include_router(models.router, prefix="/api")
+app.include_router(files.router, prefix="/api")
 
 
 @app.get("/")

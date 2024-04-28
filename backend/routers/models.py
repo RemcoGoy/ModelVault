@@ -23,7 +23,7 @@ async def create_model(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.post("/{model_id}/file")
+@router.post("/{model_id}/files")
 async def add_file(
     model_id: int,
     req: AddFileRequest,
@@ -41,6 +41,7 @@ async def add_file(
         file_dict["model_id"] = model_id
         return sb_client.table("file").insert(file_dict).execute().data[0]
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=400, detail=str(e))
 
 

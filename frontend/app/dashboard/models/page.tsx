@@ -31,7 +31,9 @@ import { ListFilter, PlusCircle } from "lucide-react"
 import { useModelStore } from "@/lib/stores/models"
 import ModelCreate from "@/components/dashboard/models/ModelCreate"
 import ModelsTable from "@/components/dashboard/models/ModelsTable"
-import { createModel, deleteModel, getModels } from "@/lib/actions/models"
+import { createModel, deleteModel, getModels, createFile } from "@/lib/actions/models"
+import { axiosClient } from "@/lib/api"
+import { useSessionStore } from "@/auth"
 
 export default function Models() {
     const setModels = useModelStore((state) => state.setModels)
@@ -56,9 +58,42 @@ export default function Models() {
                 const { model, error } = await createModel(name, library_id);
 
                 if (model) {
-                    toast.success("Model created")
-                    setCreateOpen(false)
-                    refreshModels(skip, limit)
+                    const file_upload_error = [];
+                    for (let i = 0; i < files.length; i++) {
+                        const currentFile = files.item(i)
+
+                        if (currentFile) {
+                            const { file, error } = await createFile(currentFile.name, model.id)
+
+                            if (file) {
+                                // Upload file
+                                const fd = new FormData()
+                                fd.append('file_upload', currentFile)
+                                const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/files/${file.id}/upload/`, {
+                                    method: 'POST',
+                                    body: fd,
+                                })
+
+                                if (result.status !== 200) {
+                                    const err = result.json();
+
+                                    file_upload_error.push(err)
+                                }
+                            }
+
+                            if (error) {
+                                file_upload_error.push(error)
+                            }
+                        }
+                    }
+
+                    if (file_upload_error.length > 0) {
+                        toast.error(file_upload_error[0].toString())
+                    } else {
+                        toast.success("Model created")
+                        setCreateOpen(false)
+                        refreshModels(skip, limit)
+                    }
                 }
 
                 if (error) {

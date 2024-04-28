@@ -26,6 +26,29 @@ export const createModel = async (name: string, library_id: number): Promise<{ m
     }
 }
 
+export const createFile = async (file_name: string, model_id: number): Promise<{ file: any | null, error: string | null }> => {
+
+    // Create file object
+    const createResult = await axiosClient.post(`/api/models/${model_id}/files`, {
+        "file_name": file_name
+    });
+
+    if (createResult.status !== 200) {
+        const error: { detail: string } = createResult.data;
+        return {
+            file: null,
+            error: error.detail
+        }
+    } else {
+        const file = createResult.data
+
+        return {
+            file,
+            error: null
+        }
+    }
+}
+
 export const getModels = async (skip: number, limit: number): Promise<{ models: Model[] | null, count: number, error: string | null }> => {
     const result = await axiosClient.get(`/api/models/?skip=${skip}&limit=${limit}`);
 
