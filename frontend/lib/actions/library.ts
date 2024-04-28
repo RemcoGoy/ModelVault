@@ -27,8 +27,8 @@ export const createLibrary = async (name: string, folder_name: string, tags: str
     }
 }
 
-export const getLibraries = async (skip: number, limit: number): Promise<{ libraries: Library[] | null, count: number, error: string | null }> => {
-    const result = await axiosClient.get(`/api/libraries/?skip=${skip}&limit=${limit}`);
+export const getLibraries = async (skip: number, limit: number, order_by: string = 'id', order_desc: boolean = false): Promise<{ libraries: Library[] | null, count: number, error: string | null }> => {
+    const result = await axiosClient.get(`/api/libraries/?skip=${skip}&limit=${limit}&order_by=${order_by}&order_desc=${order_desc}`);
 
     if (result.status !== 200) {
         const error: { detail: string } = result.data;

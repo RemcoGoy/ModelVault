@@ -49,23 +49,33 @@ async def add_file(
 async def get_models(
     skip: int = 0,
     limit: int = 10,
+    order_by: str = "id",
+    order_desc: bool = False,
     auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())] = None,
 ):
     sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
 
     try:
-        models = (
-            sb_client.table("model")
-            .select("*", count="exact")
-            .order("id", desc=False)
-            .range(skip, skip + limit - 1)
-            .execute()
-            .data
-        )
+        if limit == -1:
+            return (
+                sb_client.table("model")
+                .select("*", count="exact")
+                .order(order_by, desc=order_desc)
+                .execute()
+            )
+        else:
+            models = (
+                sb_client.table("model")
+                .select("*", count="exact")
+                .order(order_by, desc=order_desc)
+                .range(skip, skip + limit - 1)
+                .execute()
+                .data
+            )
 
-        count = sb_client.table("library").select("*", count="exact").execute().count
+            count = sb_client.table("model").select("*", count="exact").execute().count
 
-        return ModelsAPIResponse(data=models, count=count)
+            return ModelsAPIResponse(data=models, count=count)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

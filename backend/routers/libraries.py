@@ -42,6 +42,8 @@ async def create_library(
 async def get_libraries(
     skip: int = 0,
     limit: int = 10,
+    order_by: str = "id",
+    order_desc: bool = False,
     auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())] = None,
 ) -> LibraryAPIResponse:
     sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
@@ -51,14 +53,14 @@ async def get_libraries(
             return (
                 sb_client.table("library")
                 .select("*", count="exact")
-                .order("id", desc=False)
+                .order(order_by, desc=order_desc)
                 .execute()
             )
         else:
             libraries = (
                 sb_client.table("library")
                 .select("*", count="exact")
-                .order("id", desc=False)
+                .order(order_by, desc=order_desc)
                 .range(skip, skip + limit - 1)
                 .execute()
                 .data

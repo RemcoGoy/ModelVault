@@ -49,8 +49,8 @@ export const createFile = async (file_name: string, model_id: number): Promise<{
     }
 }
 
-export const getModels = async (skip: number, limit: number): Promise<{ models: Model[] | null, count: number, error: string | null }> => {
-    const result = await axiosClient.get(`/api/models/?skip=${skip}&limit=${limit}`);
+export const getModels = async (skip: number, limit: number, order_by: string = 'id', order_desc: boolean = false): Promise<{ models: Model[] | null, count: number, error: string | null }> => {
+    const result = await axiosClient.get(`/api/models/?skip=${skip}&limit=${limit}&order_by=${order_by}&order_desc=${order_desc}`);
 
     if (result.status !== 200) {
         const error: { detail: string } = result.data;
