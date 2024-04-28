@@ -9,12 +9,18 @@ import { useEffect, useState } from "react"
 import { Library } from "@/types/library"
 import { getLibraries } from "@/lib/actions/library"
 import { toast } from "sonner"
+import { Model } from "@/types/model"
+import { getModels } from "@/lib/actions/models"
 
 export default function Dashboard() {
   const [libraries, setLibraries] = useState<Library[]>([])
   const [libraryCount, setLibraryCount] = useState<number>(0)
 
-  const [loading, setLoading] = useState(true);
+  const [models, setModels] = useState<Model[]>([])
+  const [modelCount, setModelCount] = useState<number>(0)
+
+  const [librariesLoading, setLibrariesLoading] = useState(true)
+  const [modelsLoading, setModelsLoading] = useState(true)
 
   const refreshLibraries = async (skip: number = 0, limit: number = 10) => {
     const { libraries, count, error } = await getLibraries(skip, limit);
@@ -27,11 +33,26 @@ export default function Dashboard() {
       toast.error(error)
     }
 
-    setLoading(false)
+    setLibrariesLoading(false)
+  }
+
+  const refreshModels = async (skip: number = 0, limit: number = 10) => {
+    const { models, count, error } = await getModels(skip, limit);
+
+    if (count > 0) {
+      setModelCount(count)
+    }
+
+    if (error) {
+      toast.error(error)
+    }
+
+    setModelsLoading(false)
   }
 
   useEffect(() => {
     refreshLibraries(0, 10)
+    refreshModels(0, 10)
   }, [])
 
 
@@ -40,8 +61,8 @@ export default function Dashboard() {
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
           <UploadFileComponent />
-          <LibraryCountComponent loading={loading} count={libraryCount} />
-          <ModelCountComponent />
+          <LibraryCountComponent loading={librariesLoading} count={libraryCount} />
+          <ModelCountComponent loading={modelsLoading} count={modelCount} />
         </div>
         {/* <ObjectsTableComponent /> */}
       </div>

@@ -1,11 +1,12 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function ModelCountComponent() {
+export default function ModelCountComponent({ loading, count }: { loading: boolean, count: number }) {
     return (
         <Card x-chunk="dashboard-05-chunk-2">
             <CardHeader className="pb-2">
                 <CardDescription>Models</CardDescription>
-                <CardTitle className="text-4xl">45</CardTitle>
+                {loading ? <Skeleton className="h-10 w-[50px]" /> : <CardTitle className="text-4xl">{count}</CardTitle>}
             </CardHeader>
             <CardContent>
                 <div className="text-xs text-muted-foreground">
