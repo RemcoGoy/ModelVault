@@ -68,3 +68,20 @@ async def get_models(
         return ModelsAPIResponse(data=models, count=count)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.delete("/{model_id}")
+async def delete_model(
+    model_id: int, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
+) -> bool:
+    sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
+
+    try:
+        res = sb_client.table("model").delete(count="exact").eq("id", model_id).execute()
+
+        if res.count == 0:
+            raise HTTPException(status_code=404, detail="Model not found")
+        else:
+            return True
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

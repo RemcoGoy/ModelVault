@@ -32,8 +32,6 @@ import { useModelStore } from "@/lib/stores/models"
 import ModelCreate from "@/components/dashboard/models/ModelCreate"
 import ModelsTable from "@/components/dashboard/models/ModelsTable"
 import { createModel, deleteModel, getModels, createFile } from "@/lib/actions/models"
-import { axiosClient } from "@/lib/api"
-import { useSessionStore } from "@/auth"
 
 export default function Models() {
     const setModels = useModelStore((state) => state.setModels)
@@ -111,7 +109,7 @@ export default function Models() {
             const { result, error } = await deleteModel(id);
 
             if (result) {
-                toast.success("Library deleted")
+                toast.success("Model deleted")
                 refreshModels(skip, limit)
             }
 
