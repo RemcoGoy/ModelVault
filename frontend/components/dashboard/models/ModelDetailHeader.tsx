@@ -1,6 +1,5 @@
 'use client'
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Model } from "@/types/model";
 import { ChevronLeft } from "lucide-react";
@@ -15,9 +14,6 @@ export default function ModelDetailHeader({ model }: { model: Model | null }) {
             <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
                 {model?.name}
             </h1>
-            <Badge variant="outline" className="ml-auto sm:ml-0">
-                In stock
-            </Badge>
             <div className="hidden items-center gap-2 md:ml-auto md:flex">
                 <Button variant="outline" size="sm">
                     Discard
