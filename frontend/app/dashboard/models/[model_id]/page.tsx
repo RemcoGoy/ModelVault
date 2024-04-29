@@ -23,6 +23,7 @@ import { ModelFile } from "@/types/files"
 import { Trash2 } from "lucide-react"
 import { deleteFile } from "@/lib/actions/files"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import FileCard from "@/components/dashboard/files/FileCard"
 
 export default function ModelDetail({ params }: { params: { model_id: string } }) {
     const [model, setModel] = useState<Model | null>(null)
@@ -190,35 +191,7 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
                         <div className="grid auto-rows-max items-start gap-4 md:grid-cols-2">
                             {model && model.files.map((file: ModelFile) => {
                                 return (
-                                    <Card key={file.id}>
-                                        <CardHeader>
-                                            <div className="grid grid-cols-6">
-                                                <h5 className="col-span-5 text-ellipsis">{file.file_name}</h5>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant="outline" size="icon">
-                                                            <Trash2 className="w-4 h-4" />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action cannot be undone. This will permanently delete the file.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                            <AlertDialogAction onClick={() => removeFile(file.id)}>Continue</AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </div>
-
-
-                                        </CardHeader>
-                                        <CardContent></CardContent>
-                                    </Card>
+                                    <FileCard key={file.id} file={file} removeFile={removeFile} />
                                 )
                             })}
                         </div>
