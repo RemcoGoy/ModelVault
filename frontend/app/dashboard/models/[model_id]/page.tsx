@@ -20,6 +20,9 @@ import ModelDelete from "@/components/dashboard/models/ModelDelete"
 import { Library } from "@/types/library"
 import { getLibrary } from "@/lib/actions/library"
 import { ModelFile } from "@/types/files"
+import { Trash2 } from "lucide-react"
+import { deleteFile } from "@/lib/actions/files"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 
 export default function ModelDetail({ params }: { params: { model_id: string } }) {
     const [model, setModel] = useState<Model | null>(null)
@@ -129,6 +132,23 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
         }
     }
 
+    const removeFile = async (file_id: number) => {
+        try {
+            const { result, error } = await deleteFile(file_id)
+
+            if (result) {
+                fetchModel(parseInt(params.model_id))
+                toast("File deleted!")
+            }
+
+            if (error) {
+                toast.error(error)
+            }
+        } catch (err: any) {
+            toast.error(err)
+        }
+    }
+
     return (
         <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
@@ -172,7 +192,30 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
                                 return (
                                     <Card key={file.id}>
                                         <CardHeader>
-                                            <CardTitle>{file.file_name}</CardTitle>
+                                            <div className="grid grid-cols-6">
+                                                <h5 className="col-span-5 text-ellipsis">{file.file_name}</h5>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="outline" size="icon">
+                                                            <Trash2 className="w-4 h-4" />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action cannot be undone. This will permanently delete the file.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                            <AlertDialogAction onClick={() => removeFile(file.id)}>Continue</AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </div>
+
+
                                         </CardHeader>
                                         <CardContent></CardContent>
                                     </Card>
