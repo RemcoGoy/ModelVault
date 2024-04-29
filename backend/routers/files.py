@@ -67,10 +67,8 @@ async def delete_file(
 
 
 @router.get("/{file_id}/download")
-async def download_file(
-    file_id: int, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
-):
-    sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
+async def download_file(file_id: int):
+    sb_client = SupabaseClientFactory.get_client()
 
     file = sb_client.table("file").select("*").eq("id", file_id).execute().data
 
