@@ -73,6 +73,22 @@ async def get_libraries(
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@router.get("/{library_id}")
+async def get_library(
+    library_id: int, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
+):
+    sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
+
+    try:
+        library = sb_client.table("library").select("*").eq("id", library_id).execute().data
+        if len(library) == 0:
+            raise HTTPException(status_code=404, detail="Library not found")
+        else:
+            return library[0]
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @router.delete("/{library_id}")
 async def delete_library(
     library_id: int, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]

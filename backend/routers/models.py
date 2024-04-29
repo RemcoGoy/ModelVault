@@ -61,7 +61,12 @@ async def get_model(
         if len(model) == 0:
             raise HTTPException(status_code=404, detail="Model not found")
         else:
-            return model[0]
+            files = sb_client.table("file").select("*").eq("model_id", model_id).execute().data
+            model = model[0]
+
+            model["files"] = files
+
+            return model
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

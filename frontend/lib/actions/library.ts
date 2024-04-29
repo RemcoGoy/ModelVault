@@ -50,6 +50,27 @@ export const getLibraries = async (skip: number, limit: number, order_by: string
     }
 }
 
+export const getLibrary = async (library_id: number): Promise<{ library: Library | null, error: string | null }> => {
+    const result = await axiosClient.get(`/api/libraries/${library_id}`);
+
+    if (result.status !== 200) {
+        const error: { detail: string } = result.data;
+        return {
+            library: null,
+            error: error.detail
+        }
+    } else {
+        const resultData = result.data;
+        return {
+            library: {
+                ...resultData,
+                created_at: new Date(resultData.created_at)
+            },
+            error: null
+        }
+    }
+}
+
 export const deleteLibrary = async (id: number): Promise<{ result: boolean | null, error: string | null }> => {
     const result = await axiosClient.delete(`/api/libraries/${id}`);
 

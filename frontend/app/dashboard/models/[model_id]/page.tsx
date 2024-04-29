@@ -1,61 +1,56 @@
 'use client'
 
-import Image from "next/image"
-import {
-    PlusCircle,
-    Upload,
-} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import { Textarea } from "@/components/ui/textarea"
-import {
-    ToggleGroup,
-    ToggleGroupItem,
-} from "@/components/ui/toggle-group"
 import ModelDetailHeader from "@/components/dashboard/models/ModelDetailHeader"
 import { useEffect, useState } from "react"
 import { Model } from "@/types/model"
 import { getModel, updateModel } from "@/lib/actions/models"
 import { toast } from "sonner"
 import ModelDelete from "@/components/dashboard/models/ModelDelete"
+import { Library } from "@/types/library"
+import { getLibrary } from "@/lib/actions/library"
 
 export default function ModelDetail({ params }: { params: { model_id: string } }) {
     const [model, setModel] = useState<Model | null>(null)
+    const [library, setLibrary] = useState<Library | null>(null)
 
     const [name, setName] = useState("")
 
     useEffect(() => {
+        const fetchLibrary = async (library_id: number) => {
+            try {
+                const { library, error } = await getLibrary(library_id);
+
+                if (library) {
+                    setLibrary(library)
+                }
+
+                if (error) {
+                    toast.error(error)
+                }
+            } catch (err: any) {
+                toast.error(err)
+            }
+        }
+
         const fetchModel = async () => {
             const { model, error } = await getModel(parseInt(params.model_id))
 
             if (model) {
                 setModel(model)
                 setName(model.name)
+
+                fetchLibrary(model.library_id)
             }
 
             if (error) {
@@ -112,6 +107,16 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
                                             className="w-full"
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="grid gap-3">
+                                        <Label htmlFor="library">Library</Label>
+                                        <Input
+                                            id="library"
+                                            type="text"
+                                            className="w-full"
+                                            value={library?.name}
+                                            disabled={true}
                                         />
                                     </div>
                                 </div>
