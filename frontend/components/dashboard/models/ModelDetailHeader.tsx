@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Model } from "@/types/model";
 import { ChevronLeft } from "lucide-react";
 
-export default function ModelDetailHeader({ model }: { model: Model | null }) {
+export default function ModelDetailHeader({ model, onSave }: { model: Model | null, onSave: () => void }) {
     return (
         <div className="flex items-center gap-4">
             <Button variant="outline" size="icon" className="h-7 w-7">
@@ -18,7 +18,7 @@ export default function ModelDetailHeader({ model }: { model: Model | null }) {
                 <Button variant="outline" size="sm">
                     Discard
                 </Button>
-                <Button size="sm">Save Product</Button>
+                <Button onClick={onSave} size="sm">Save Product</Button>
             </div>
         </div>
     )

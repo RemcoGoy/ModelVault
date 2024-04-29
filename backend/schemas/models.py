@@ -1,10 +1,13 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 
-class CreateModelRequest(BaseModel):
+class UpdateModelRequest(BaseModel):
     name: str
+
+
+class CreateModelRequest(UpdateModelRequest):
     library_id: int
 
 

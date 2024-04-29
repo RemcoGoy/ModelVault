@@ -40,12 +40,14 @@ import {
 import ModelDetailHeader from "@/components/dashboard/models/ModelDetailHeader"
 import { useEffect, useState } from "react"
 import { Model } from "@/types/model"
-import { getModel } from "@/lib/actions/models"
+import { getModel, updateModel } from "@/lib/actions/models"
 import { toast } from "sonner"
 import ModelDelete from "@/components/dashboard/models/ModelDelete"
 
 export default function ModelDetail({ params }: { params: { model_id: string } }) {
     const [model, setModel] = useState<Model | null>(null)
+
+    const [name, setName] = useState("")
 
     useEffect(() => {
         const fetchModel = async () => {
@@ -53,6 +55,7 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
 
             if (model) {
                 setModel(model)
+                setName(model.name)
             }
 
             if (error) {
@@ -67,16 +70,37 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
         }
     }, [params.model_id])
 
+    const onSave = async () => {
+        try {
+            const { model, error } = await updateModel(parseInt(params.model_id), { name });
+
+            if (model) {
+                setModel(model)
+                setName(model.name)
+
+                toast("Model updated!")
+            }
+
+            if (error) {
+                toast.error(error)
+            }
+        } catch (e: any) {
+            toast.error(e)
+        }
+    }
 
     return (
         <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-                <ModelDetailHeader model={model} />
+                <ModelDetailHeader model={model} onSave={onSave} />
                 <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
                     <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
                         <Card x-chunk="dashboard-07-chunk-0">
                             <CardHeader>
                                 <CardTitle>Model Details</CardTitle>
+                                <CardDescription>
+                                    Created at {model?.created_at.toLocaleDateString('en-BE')} {model?.created_at.toLocaleTimeString('en-BE')}
+                                </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid gap-6">
@@ -86,7 +110,8 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
                                             id="name"
                                             type="text"
                                             className="w-full"
-                                            defaultValue={model?.name}
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
                                         />
                                     </div>
                                 </div>
@@ -101,7 +126,7 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
                     <Button variant="outline" size="sm">
                         Discard
                     </Button>
-                    <Button size="sm">Save Product</Button>
+                    <Button onClick={onSave} size="sm">Save Model</Button>
                 </div>
             </div>
         </div>

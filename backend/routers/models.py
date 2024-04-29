@@ -3,7 +3,12 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 
 from schemas.auth import AuthSchema
-from schemas.models import AddFileRequest, CreateModelRequest, ModelsAPIResponse
+from schemas.models import (
+    AddFileRequest,
+    CreateModelRequest,
+    ModelsAPIResponse,
+    UpdateModelRequest,
+)
 from utils.supabase import SupabaseClientFactory
 from utils.supabase_jwt import SupabaseJWTBearer
 
@@ -57,6 +62,21 @@ async def get_model(
             raise HTTPException(status_code=404, detail="Model not found")
         else:
             return model[0]
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.patch("/{model_id}")
+async def update_model(
+    model_id: int,
+    req: UpdateModelRequest,
+    auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())],
+):
+    sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
+
+    try:
+        model_dict = req.model_dump()
+        return sb_client.table("model").update(model_dict).eq("id", model_id).execute().data[0]
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
