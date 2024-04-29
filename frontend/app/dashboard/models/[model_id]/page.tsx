@@ -187,7 +187,7 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
                                 </div>
                             </CardContent>
                         </Card>
-                        <div className="grid auto-rows-max items-start gap-4 grid-cols-2">
+                        <div className="grid auto-rows-max items-start gap-4 md:grid-cols-2">
                             {model && model.files.map((file: ModelFile) => {
                                 return (
                                     <Card key={file.id}>
