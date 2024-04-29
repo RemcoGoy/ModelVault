@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 import ModelDetailHeader from "@/components/dashboard/models/ModelDetailHeader"
 import { useEffect, useState } from "react"
 import { Model } from "@/types/model"
-import { getModel, updateModel } from "@/lib/actions/models"
+import { createFile, getModel, updateModel } from "@/lib/actions/models"
 import { toast } from "sonner"
 import ModelDelete from "@/components/dashboard/models/ModelDelete"
 import { Library } from "@/types/library"
@@ -27,44 +27,88 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
 
     const [name, setName] = useState("")
 
-    useEffect(() => {
-        const fetchLibrary = async (library_id: number) => {
-            try {
-                const { library, error } = await getLibrary(library_id);
+    const fetchLibrary = async (library_id: number) => {
+        try {
+            const { library, error } = await getLibrary(library_id);
 
-                if (library) {
-                    setLibrary(library)
-                }
-
-                if (error) {
-                    toast.error(error)
-                }
-            } catch (err: any) {
-                toast.error(err)
-            }
-        }
-
-        const fetchModel = async () => {
-            const { model, error } = await getModel(parseInt(params.model_id))
-
-            if (model) {
-                setModel(model)
-                setName(model.name)
-
-                fetchLibrary(model.library_id)
+            if (library) {
+                setLibrary(library)
             }
 
             if (error) {
                 toast.error(error)
             }
+        } catch (err: any) {
+            toast.error(err)
+        }
+    }
+
+    const fetchModel = async (model_id: number) => {
+        const { model, error } = await getModel(model_id)
+
+        if (model) {
+            setModel(model)
+            setName(model.name)
+
+            fetchLibrary(model.library_id)
         }
 
+        if (error) {
+            toast.error(error)
+        }
+    }
+
+    useEffect(() => {
         try {
-            fetchModel()
+            fetchModel(parseInt(params.model_id))
         } catch (e: any) {
             toast.error(e)
         }
     }, [params.model_id])
+
+    const addFiles = async (files: FileList | null) => {
+        if (files) {
+            try {
+                const file_upload_error = [];
+                for (let i = 0; i < files.length; i++) {
+                    const currentFile = files.item(i)
+
+                    if (currentFile) {
+                        const { file, error } = await createFile(currentFile.name, parseInt(params.model_id))
+
+                        if (file) {
+                            // Upload file
+                            const fd = new FormData()
+                            fd.append('file_upload', currentFile)
+                            const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/files/${file.id}/upload/`, {
+                                method: 'POST',
+                                body: fd,
+                            })
+
+                            if (result.status !== 200) {
+                                const err = result.json();
+
+                                file_upload_error.push(err)
+                            }
+                        }
+
+                        if (error) {
+                            file_upload_error.push(error)
+                        }
+                    }
+                }
+
+                if (file_upload_error.length > 0) {
+                    toast.error(file_upload_error[0])
+                } else {
+                    fetchModel(parseInt(params.model_id))
+                    toast("Files uploaded!")
+                }
+            } catch (e: any) {
+                toast.error(e)
+            }
+        }
+    }
 
     const onSave = async () => {
         try {
@@ -130,6 +174,7 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
                                         <CardHeader>
                                             <CardTitle>{file.file_name}</CardTitle>
                                         </CardHeader>
+                                        <CardContent></CardContent>
                                     </Card>
                                 )
                             })}
@@ -137,6 +182,24 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
                     </div>
                     <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
                         <ModelDelete model={model} />
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Add more files</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid gap-6">
+                                    <div className="grid gap-3">
+                                        <Input
+                                            id="name"
+                                            type="file"
+                                            multiple={true}
+                                            className="w-full"
+                                            onChange={(e) => addFiles(e.target.files)}
+                                        />
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
                 <div className="flex items-center justify-center gap-2 md:hidden">
