@@ -19,6 +19,7 @@ import { toast } from "sonner"
 import ModelDelete from "@/components/dashboard/models/ModelDelete"
 import { Library } from "@/types/library"
 import { getLibrary } from "@/lib/actions/library"
+import { ModelFile } from "@/types/files"
 
 export default function ModelDetail({ params }: { params: { model_id: string } }) {
     const [model, setModel] = useState<Model | null>(null)
@@ -122,6 +123,17 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
                                 </div>
                             </CardContent>
                         </Card>
+                        <div className="grid auto-rows-max items-start gap-4 grid-cols-2">
+                            {model && model.files.map((file: ModelFile) => {
+                                return (
+                                    <Card key={file.id}>
+                                        <CardHeader>
+                                            <CardTitle>{file.file_name}</CardTitle>
+                                        </CardHeader>
+                                    </Card>
+                                )
+                            })}
+                        </div>
                     </div>
                     <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
                         <ModelDelete model={model} />
