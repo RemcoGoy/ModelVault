@@ -151,7 +151,7 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
 
     return (
         <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-            <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+            <div className="mx-auto grid max-w-[75rem] flex-1 auto-rows-max gap-4">
                 <ModelDetailHeader model={model} onSave={onSave} />
                 <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
                     <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">

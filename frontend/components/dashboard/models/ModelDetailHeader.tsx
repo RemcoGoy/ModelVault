@@ -7,7 +7,7 @@ import { ChevronLeft } from "lucide-react";
 export default function ModelDetailHeader({ model, onSave }: { model: Model | null, onSave: () => void }) {
     return (
         <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" className="h-7 w-7">
+            <Button onClick={() => window.history.back()} variant="outline" size="icon" className="h-7 w-7">
                 <ChevronLeft className="h-4 w-4" />
                 <span className="sr-only">Back</span>
             </Button>
@@ -18,7 +18,7 @@ export default function ModelDetailHeader({ model, onSave }: { model: Model | nu
                 <Button variant="outline" size="sm">
                     Discard
                 </Button>
-                <Button onClick={onSave} size="sm">Save Product</Button>
+                <Button onClick={onSave} size="sm">Save Model</Button>
             </div>
         </div>
     )
