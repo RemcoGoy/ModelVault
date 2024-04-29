@@ -209,6 +209,7 @@ export default function ModelDetail({ params }: { params: { model_id: string } }
                                             id="name"
                                             type="file"
                                             multiple={true}
+                                            accept=".stl"
                                             className="w-full"
                                             onChange={(e) => addFiles(e.target.files)}
                                         />

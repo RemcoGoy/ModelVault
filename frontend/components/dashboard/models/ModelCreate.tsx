@@ -90,6 +90,7 @@ export default function ModelCreate({ children, onCreate, dialogOpen, setDialogO
                             id="files"
                             type="file"
                             multiple={true}
+                            accept=".stl"
                             className="col-span-3"
                             onChange={(e) => setFiles(e.target.files)}
                         />
