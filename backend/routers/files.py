@@ -2,6 +2,7 @@ import os
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi.responses import FileResponse
 
 from schemas.auth import AuthSchema
 from utils.supabase import SupabaseClientFactory
@@ -61,5 +62,27 @@ async def delete_file(
             raise Exception("Invalid STORE_FILES configuration")
 
         return sb_client.table("file").delete().eq("id", file_id).execute()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/{file_id}/download")
+async def download_file(
+    file_id: int, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
+):
+    sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
+
+    file = sb_client.table("file").select("*").eq("id", file_id).execute().data
+
+    if len(file) == 0:
+        raise Exception("File not found")
+
+    try:
+        file = file[0]
+        file_location = file["path"]
+        file_name = file["file_name"]
+        return FileResponse(
+            file_location, media_type="application/octet-stream", filename=file_name
+        )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
