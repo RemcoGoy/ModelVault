@@ -72,6 +72,28 @@ export const getModels = async (skip: number, limit: number, order_by: string = 
     }
 }
 
+export const getModel = async (model_id: number): Promise<{ model: Model | null, error: string | null }> => {
+    const result = await axiosClient.get(`/api/models/${model_id}`);
+
+    if (result.status !== 200) {
+        const error: { detail: string } = result.data;
+        return {
+            model: null,
+            error: error.detail
+        }
+    } else {
+        const resultData = result.data;
+
+        return {
+            model: {
+                ...resultData,
+                created_at: new Date(resultData.created_at)
+            },
+            error: null
+        }
+    }
+}
+
 export const deleteModel = async (id: number): Promise<{ result: boolean | null, error: string | null }> => {
     const result = await axiosClient.delete(`/api/models/${id}`);
 

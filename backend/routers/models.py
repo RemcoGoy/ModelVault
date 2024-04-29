@@ -45,6 +45,22 @@ async def add_file(
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@router.get("/{model_id}")
+async def get_model(
+    model_id: int, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
+):
+    sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
+
+    try:
+        model = sb_client.table("model").select("*").eq("id", model_id).execute().data
+        if len(model) == 0:
+            raise HTTPException(status_code=404, detail="Model not found")
+        else:
+            return model[0]
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @router.get("/")
 async def get_models(
     skip: int = 0,

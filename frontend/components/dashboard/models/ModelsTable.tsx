@@ -19,8 +19,15 @@ import {
 import { Button } from "@/components/ui/button"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Model } from "@/types/model"
+import { useRouter } from "next/navigation"
 
 export default function ModelsTable({ models, onDelete }: { models: Model[], onDelete: (id: number) => void }) {
+    const router = useRouter();
+
+    const openModelDetail = (id: number) => {
+        router.push(`/dashboard/models/${id}`)
+    }
+
     return (
         <Table>
             <TableHeader>
@@ -38,7 +45,7 @@ export default function ModelsTable({ models, onDelete }: { models: Model[], onD
             <TableBody>
                 {models.map((model) => {
                     return (
-                        <TableRow key={model.id}>
+                        <TableRow key={model.id} onClick={() => openModelDetail(model.id)}>
                             <TableCell className="font-medium">
                                 {model.id}
                             </TableCell>
