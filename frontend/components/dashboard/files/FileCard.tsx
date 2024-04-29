@@ -3,31 +3,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ModelFile } from "@/types/files";
 import { Trash2 } from "lucide-react";
-import { Canvas, useFrame, ThreeElements } from '@react-three/fiber'
-import { useRef, useState } from "react";
-import * as THREE from 'three'
+import { Canvas } from '@react-three/fiber'
+import { FileRender } from "@/components/dashboard/files/FileRender"
+import { StlViewer } from "react-stl-viewer";
 
-
-function Box(props: ThreeElements['mesh']) {
-    const ref = useRef<THREE.Mesh>(null!)
-    const [hovered, hover] = useState(false)
-    const [clicked, click] = useState(false)
-    useFrame((state, delta) => (ref.current.rotation.x += delta))
-    return (
-        <mesh
-            {...props}
-            ref={ref}
-            scale={clicked ? 1.5 : 1}
-            onClick={(event) => click(!clicked)}
-            onPointerOver={(event) => hover(true)}
-            onPointerOut={(event) => hover(false)}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
-        </mesh>
-    )
-}
 
 export default function FileCard({ file, removeFile }: { file: ModelFile, removeFile: (id: number) => void }) {
+    const style = {
+        top: 0,
+        left: 0,
+        height: '100%',
+        width: '100%'
+    }
+
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/files/${file.id}/download`
+
     return (
         <Card key={file.id}>
             <CardHeader>
@@ -57,12 +47,12 @@ export default function FileCard({ file, removeFile }: { file: ModelFile, remove
 
             </CardHeader>
             <CardContent>
-                <Canvas>
-                    <ambientLight intensity={Math.PI / 2} />
-                    <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
-                    <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-                    <Box position={[-1.2, 0, 0]} />
-                </Canvas>
+                <StlViewer
+                    style={style}
+                    orbitControls
+                    shadows
+                    url={url}
+                />
             </CardContent>
         </Card>
     )
