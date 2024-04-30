@@ -22,3 +22,21 @@ uvicorn main:app [--reload]
 cd frontend
 npm run dev
 ```
+
+## Running locally (Docker)
+
+### Backend
+
+```bash
+cd backend
+docker build -t modelvault-backend:latest .
+docker run -d -p 8000:8000 modelvault-backend:latest
+```
+
+### Frontend
+
+```bash
+cd frontend
+docker build -t modelvault-frontend:latest .
+docker run -d -p 3000:3000 modelvault-frontend:latest
+```
