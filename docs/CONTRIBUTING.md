@@ -3,6 +3,8 @@
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
 Please note we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
 
+To contribute to this project, please follow the [fork and PR workflow](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project). Don't push directly to this repo unless you are a maintainer.
+
 ## Development environment setup
 
 > **[?]**
@@ -11,13 +13,19 @@ Please note we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in
 
 To set up a development environment, please follow these steps:
 
-1. Clone the repo
+1. Create a fork of the repo
 
-   ```sh
-   git clone https://github.com/RemcoGoy/modelvault2
+   ![fork repo](./images/fork.png)
+
+2. Install requirements
+
+   ```bash
+   cd backend
+   pip install -r requirements-dev.txt
+   pip install -r requirements.txt
+   cd ../frontend
+   npm ci
    ```
-
-2. TODO
 
 ## Issues and feature requests
 
