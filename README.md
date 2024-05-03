@@ -21,10 +21,13 @@
 <div align="center">
 <br />
 
-[![Project license](https://img.shields.io/github/license/RemcoGoy/ModelVault.svg?style=flat-square)](LICENSE)
+[![Project license](https://img.shields.io/github/license/RemcoGoy/ModelVault.svg)](LICENSE)
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/RemcoGoy/ModelVault?filename=frontend%2Fpackage.json)](frontend/package.json)
 
-[![Pull Requests welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg?style=flat-square)](https://github.com/RemcoGoy/ModelVault/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
-[![code with love by RemcoGoy](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-RemcoGoy-ff1414.svg?style=flat-square)](https://github.com/RemcoGoy)
+
+[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/RemcoGoy/ModelVault)](https://github.com/RemcoGoy/ModelVault/issues)
+[![Pull Requests welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/RemcoGoy/ModelVault/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+[![code with love by RemcoGoy](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-RemcoGoy-ff1414.svg)](https://github.com/RemcoGoy)
 
 </div>
 
