@@ -81,8 +81,7 @@ This project is in its early stages and provides a basic solution for organizing
 
 ### Built With
 
-> **[?]**
-> Please provide the technologies that are used in the project.
+[![Built with](https://skillicons.dev/icons?i=python,typescript,react,supabase&theme=dark)](https://skillicons.dev)
 
 ## Getting Started
 
