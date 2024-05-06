@@ -39,7 +39,7 @@
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
-- [Usage](#usage)
+<!-- - [Usage](#usage) -->
 - [Roadmap](#roadmap)
 - [Support](#support)
 - [Project assistance](#project-assistance)
@@ -87,8 +87,9 @@ This project is in its early stages and provides a basic solution for organizing
 
 ### Prerequisites
 
-> **[?]**
-> What are the project requirements/dependencies?
+- Python 3.11
+- Node v21.6.2
+- NPM 10.2.4
 
 ### Installation (locally)
 
@@ -123,12 +124,12 @@ cd frontend
 docker build -t modelvault-frontend:latest .
 docker run -d -p 3000:3000 modelvault-frontend:latest
 ```
-
+<!-- 
 ## Usage
 
 > **[?]**
 > How does one go about using it?
-> Provide various use cases and code examples here.
+> Provide various use cases and code examples here. -->
 
 ## Roadmap
 
