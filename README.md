@@ -57,6 +57,8 @@
 
 <table><tr><td>
 
+> **[!]** This project is under active development. This means the codebase is subject to frequent changes, and features may be unstable or incomplete. While we welcome contributions and feedback, please be aware that things might break unexpectedly.
+
 > **[?]**
 > Provide general information about your project here.
 > What problem does it (intend to) solve?
