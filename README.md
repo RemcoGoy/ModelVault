@@ -7,8 +7,8 @@
 
 <div align="center">
   ModelVault
-  <br />
-  <a href="#about"><strong>Explore the screenshots »</strong></a>
+  <!-- <br />
+  <a href="#about"><strong>Explore the screenshots »</strong></a> -->
   <br />
   <br />
   <a href="https://github.com/RemcoGoy/ModelVault/issues/new?assignees=&labels=bug&template=01_BUG_REPORT.md&title=bug%3A+">Report a Bug</a>
@@ -64,7 +64,7 @@ This project is in its early stages and provides a basic solution for organizing
 - Easy model uploading and storage
 - Simple tagging functionality
 
-<details>
+<!-- <details>
 <summary>Screenshots</summary>
 <br>
 
@@ -75,7 +75,7 @@ This project is in its early stages and provides a basic solution for organizing
 | :-------------------------------------------------------------------: | :--------------------------------------------------------------------: |
 | <img src="docs/images/screenshot.png" title="Home Page" width="100%"> | <img src="docs/images/screenshot.png" title="Login Page" width="100%"> |
 
-</details>
+</details> -->
 
 </td></tr></table>
 
