@@ -59,12 +59,10 @@
 
 **[!]** This project is under active development. This means the codebase is subject to frequent changes, and features may be unstable or incomplete. While we welcome contributions and feedback, please be aware that things might break unexpectedly.
 
-> **[?]**
-> Provide general information about your project here.
-> What problem does it (intend to) solve?
-> What is the purpose of your project?
-> Why did you undertake it?
-> You don't have to answer all the questions -- just the ones relevant to your project.
+This project is in its early stages and provides a basic solution for organizing and managing your 3D model collection. Current features include:
+
+- Easy model uploading and storage
+- Simple tagging functionality
 
 <details>
 <summary>Screenshots</summary>
