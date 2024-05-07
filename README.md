@@ -141,8 +141,7 @@ See the [open issues](https://github.com/RemcoGoy/ModelVault/issues) for a list 
 
 ## Support
 
-> **[?]**
-> Provide additional ways to contact the project maintainer/maintainers.
+<a href="https://www.buymeacoffee.com/remcogoy" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 Reach out to the maintainer at one of the following places:
 
