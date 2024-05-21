@@ -46,12 +46,13 @@ export default function FileCard({ file, removeFile }: { file: ModelFile, remove
 
 
             </CardHeader>
-            <CardContent>
+            <CardContent style={{ height: '25vh' }}>
                 <StlViewer
                     style={style}
                     orbitControls
                     shadows
                     url={url}
+                    modelProps={{ scale: 1.2 }}
                 />
             </CardContent>
         </Card>
