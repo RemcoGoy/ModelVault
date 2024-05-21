@@ -13,8 +13,6 @@ app = FastAPI(prefix="/api")
 
 origins = []
 
-DEBUG = os.getenv("DEBUG", False)
-
 origins.append(os.getenv("FRONTEND_URL", None))
 
 app.add_middleware(

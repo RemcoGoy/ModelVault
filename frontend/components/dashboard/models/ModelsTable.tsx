@@ -34,6 +34,7 @@ export default function ModelsTable({ models, onDelete }: { models: Model[], onD
                 <TableRow>
                     <TableHead>ID</TableHead>
                     <TableHead>Name</TableHead>
+                    <TableHead>Library</TableHead>
                     <TableHead className="hidden md:table-cell">
                         Created at
                     </TableHead>
@@ -51,6 +52,9 @@ export default function ModelsTable({ models, onDelete }: { models: Model[], onD
                             </TableCell>
                             <TableCell>
                                 {model.name}
+                            </TableCell>
+                            <TableCell>
+                                {model.library.name}
                             </TableCell>
                             <TableCell>
                                 {model.created_at.toLocaleString("en-BE")}

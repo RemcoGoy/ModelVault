@@ -7,4 +7,7 @@ export type Model = {
     created_at: Date;
     library_id: number;
     files: ModelFile[];
+    library: {
+        name: string
+    }
 }

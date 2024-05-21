@@ -107,7 +107,7 @@ async def get_models(
         else:
             models = (
                 sb_client.table("model")
-                .select("*", count="exact")
+                .select("*, library (name)", count="exact")
                 .order(order_by, desc=order_desc)
                 .range(skip, skip + limit - 1)
                 .execute()
