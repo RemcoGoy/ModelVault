@@ -53,9 +53,9 @@ export default function Libraries() {
     }])
     const [activeIndex, setActiveIndes] = useState(0)
 
-    const onCreate = async (name: string, folder_name: string, tags: string) => {
+    const onCreate = async (name: string, tags: string) => {
         try {
-            const { library, error } = await createLibrary(name, folder_name, tags);
+            const { library, error } = await createLibrary(name, tags);
 
             if (library) {
                 toast.success("Library created")

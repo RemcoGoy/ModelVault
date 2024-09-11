@@ -3,10 +3,9 @@
 import { Library } from "@/types/library";
 import { axiosClient } from "@/lib/api";
 
-export const createLibrary = async (name: string, folder_name: string, tags: string): Promise<{ library: Library | null, error: string | null }> => {
+export const createLibrary = async (name: string, tags: string): Promise<{ library: Library | null, error: string | null }> => {
     const result = await axiosClient.post(`/api/libraries/`, {
         name,
-        folder_name,
         tags
     });
 
