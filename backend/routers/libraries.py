@@ -114,6 +114,7 @@ async def delete_library(
         if res.count == 0:
             raise HTTPException(status_code=404, detail="Library not found")
         else:
+            sb_client.storage.delete_bucket(res.data[0]["name"])
             return True
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
