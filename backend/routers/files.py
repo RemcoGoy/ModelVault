@@ -22,13 +22,14 @@ async def upload_file(file_id: int, file_upload: UploadFile):
             sb_client.table("library").select("*").eq("id", model["library_id"]).execute().data[0]
         )
 
-        STORE_FILES = os.getenv("STORE_FILES", "local")
+        STORE_FILES = os.getenv("STORE_FILES", "supabase")
 
         file_path = None
         if STORE_FILES == "local":
-            file_path = os.path.join(library["path"], file_upload.filename)
-            with open(file_path, "wb") as buffer:
-                buffer.write(file_upload.file.read())
+            # file_path = os.path.join(library["path"], file_upload.filename)
+            # with open(file_path, "wb") as buffer:
+            #     buffer.write(file_upload.file.read())
+            raise NotImplementedError()
         elif STORE_FILES == "supabase":
             raise NotImplementedError()
         else:

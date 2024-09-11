@@ -28,7 +28,6 @@ export default function LibrariesTable({ libraries, onDelete }: { libraries: Lib
                 <TableRow>
                     <TableHead>ID</TableHead>
                     <TableHead>Name</TableHead>
-                    <TableHead>Path</TableHead>
                     <TableHead>Tags</TableHead>
                     <TableHead className="hidden md:table-cell">
                         Created at
@@ -47,9 +46,6 @@ export default function LibrariesTable({ libraries, onDelete }: { libraries: Lib
                             </TableCell>
                             <TableCell>
                                 {library.name}
-                            </TableCell>
-                            <TableCell>
-                                {library.path}
                             </TableCell>
                             <TableCell>
                                 {library.tags.map(tag => {

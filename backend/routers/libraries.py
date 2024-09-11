@@ -16,23 +16,36 @@ async def create_library(
     req: CreateLibraryRequest, auth_session: Annotated[AuthSchema, Depends(SupabaseJWTBearer())]
 ):
     sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
-    LIBRARIES_PATH = os.getenv("LIBRARIES_PATH")
+    STORE_FILES = os.getenv("STORE_FILES", "supabase")
+
+    if STORE_FILES == "local":
+        # LIBRARIES_PATH = os.getenv("LIBRARIES_PATH")
+        #     library_path = os.path.join(LIBRARIES_PATH, req.folder_name)
+        #     if not LIBRARIES_PATH in library_path:
+        #         raise HTTPException(status_code=400, detail="Invalid path configuration")
+
+        #     if not os.path.exists(library_path):
+        #         try:
+        #             os.mkdir(library_path)
+        #         except OSError as err:
+        #             raise err
+        raise NotImplementedError()
+    elif STORE_FILES == "supabase":
+
+        def create_folder():
+            return sb_client.storage.create_bucket(req.name)
+
+    else:
+        raise Exception("Invalid STORE_FILES configuration")
 
     try:
-        library_path = os.path.join(LIBRARIES_PATH, req.folder_name)
-        if not LIBRARIES_PATH in library_path:
-            raise HTTPException(status_code=400, detail="Invalid path configuration")
-
-        if not os.path.exists(library_path):
-            try:
-                os.mkdir(library_path)
-            except OSError as err:
-                raise err
-
+        # Prepare database entry
         library_dict = req.model_dump()
         library_dict["tags"] = library_dict["tags"].split(",")
-        library_dict["path"] = library_path
-        del library_dict["folder_name"]
+
+        # Save folder
+        create_folder()
+
         return sb_client.table("library").insert(library_dict).execute().data[0]
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
