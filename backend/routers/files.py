@@ -16,7 +16,13 @@ async def upload_file(file_id: int, file_upload: UploadFile):
     sb_client = SupabaseClientFactory.get_client()
 
     try:
-        file = sb_client.table("file").select("*").eq("id", file_id).execute().data[0]
+        file = sb_client.table("file").select("*").eq("id", file_id).execute().data
+
+        if len(file) == 0:
+            raise HTTPException(status_code=404, message="File not found")
+        else:
+            file = file[0]
+
         model = sb_client.table("model").select("*").eq("id", file["model_id"]).execute().data[0]
         library = (
             sb_client.table("library").select("*").eq("id", model["library_id"]).execute().data[0]
@@ -31,7 +37,8 @@ async def upload_file(file_id: int, file_upload: UploadFile):
             #     buffer.write(file_upload.file.read())
             raise NotImplementedError()
         elif STORE_FILES == "supabase":
-            raise NotImplementedError()
+            data = file_upload.file.read()
+            sb_client.storage.from_(library["name"]).upload(file=data, path=file_upload.filename)
         else:
             raise Exception("Invalid STORE_FILES configuration")
 
