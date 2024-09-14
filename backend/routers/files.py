@@ -19,7 +19,7 @@ async def upload_file(file_id: int, file_upload: UploadFile):
         file = sb_client.table("file").select("*").eq("id", file_id).execute().data
 
         if len(file) == 0:
-            raise HTTPException(status_code=404, message="File not found")
+            raise HTTPException(status_code=404, detail="File not found")
         else:
             file = file[0]
 
