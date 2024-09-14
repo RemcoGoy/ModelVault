@@ -58,18 +58,26 @@ async def delete_file(
     sb_client = SupabaseClientFactory.get_client(auth_session.access_token)
 
     try:
-        file = sb_client.table("file").select("*").eq("id", file_id).execute().data[0]
+        file = sb_client.table("file").select("*").eq("id", file_id).execute().data
+
+        if len(file) == 0:
+            raise HTTPException(status_code=404, detail="File not found")
+        else:
+            file = file[0]
+
         model = sb_client.table("model").select("*").eq("id", file["model_id"]).execute().data[0]
         library = (
             sb_client.table("library").select("*").eq("id", model["library_id"]).execute().data[0]
         )
 
-        STORE_FILES = os.getenv("STORE_FILES", "local")
+        STORE_FILES = os.getenv("STORE_FILES", "supabase")
 
         if STORE_FILES == "local":
-            os.remove(file["path"])
+            # os.remove(file["path"])
+            raise NotImplementedError("Saving to local storage is not supported yet")
         elif STORE_FILES == "supabase":
-            raise NotImplementedError()
+            print(file["file_name"])
+            sb_client.storage.from_(library["name"]).remove(file["file_name"])
         else:
             raise Exception("Invalid STORE_FILES configuration")
 
