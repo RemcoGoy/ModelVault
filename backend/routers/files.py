@@ -38,7 +38,11 @@ async def upload_file(file_id: int, file_upload: UploadFile):
             raise NotImplementedError()
         elif STORE_FILES == "supabase":
             data = file_upload.file.read()
-            sb_client.storage.from_(library["name"]).upload(file=data, path=file_upload.filename)
+            sb_client.storage.from_(library["name"]).upload(
+                file=data,
+                path=file_upload.filename,
+                file_options={"content-type": file_upload.content_type},
+            )
         else:
             raise Exception("Invalid STORE_FILES configuration")
 
