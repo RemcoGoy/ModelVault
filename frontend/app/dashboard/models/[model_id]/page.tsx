@@ -21,6 +21,7 @@ import { Library } from "@/types/library"
 import { getLibrary } from "@/lib/actions/library"
 import { ModelFile } from "@/types/files"
 import { deleteFile } from "@/lib/actions/files"
+import { deleteModel } from "@/lib/actions/models"
 import FileCard from "@/components/dashboard/files/FileCard"
 
 export default function ModelDetail({ params }: { params: { model_id: string } }) {

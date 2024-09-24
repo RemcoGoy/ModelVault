@@ -2,10 +2,32 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Model } from "@/types/model";
+import { deleteModel } from "@/lib/actions/models";
+import { toast } from "sonner"
+import { useRouter } from "next/navigation";
 
 export default function ModelDelete({ model }: { model: Model | null }) {
-    const onDelete = () => {
-        console.log("delete model")
+    const router = useRouter();
+
+    const onDelete = async () => {
+        if (model) {
+            const deleteId = model.id;
+
+            try {
+                const { result, error } = await deleteModel(deleteId);
+
+                if (result) {
+                    toast.success("Model deleted successfully");
+                    router.push("/dashboard/models")
+                }
+
+                if (error) {
+                    toast.error(error)
+                }
+            } catch (err: any) {
+                toast.error(err.toString())
+            }
+        }
     }
 
     return (

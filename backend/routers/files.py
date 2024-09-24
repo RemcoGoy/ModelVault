@@ -76,7 +76,6 @@ async def delete_file(
             # os.remove(file["path"])
             raise NotImplementedError("Saving to local storage is not supported yet")
         elif STORE_FILES == "supabase":
-            print(file["file_name"])
             sb_client.storage.from_(library["name"]).remove(file["file_name"])
         else:
             raise Exception("Invalid STORE_FILES configuration")

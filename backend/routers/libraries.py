@@ -114,7 +114,16 @@ async def delete_library(
         if res.count == 0:
             raise HTTPException(status_code=404, detail="Library not found")
         else:
-            sb_client.storage.delete_bucket(res.data[0]["name"])
+
+            STORE_FILES = os.getenv("STORE_FILES", "supabase")
+
+            if STORE_FILES == "local":
+                raise NotImplementedError()
+            elif STORE_FILES == "supabase":
+                sb_client.storage.delete_bucket(res.data[0]["name"])
+            else:
+                raise Exception("Invalid STORE_FILES configuration")
+
             return True
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
